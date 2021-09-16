@@ -20,15 +20,20 @@
     var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="LY&#39;s Blog">
-<meta property="og:url" content="http://plauenly.github.io/archives/2021/index.html">
+  <meta name="description" content="使用”&#96;&#96;&#96;”再加回车键，可以附上代码。 弄清该声明的办法是从右往左读，首先是常量指针，指向的对象是双精度浮点型常量。 1const double *const pip;  只有指针指向常量，才不能通过指针修改对象值。 const int *p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++_Primer_第四次阅读">
+<meta property="og:url" content="http://plauenly.github.io/2021/09/10/C-Primer-%E7%AC%AC%E5%9B%9B%E6%AC%A1%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="LY&#39;s Blog">
+<meta property="og:description" content="使用”&#96;&#96;&#96;”再加回车键，可以附上代码。 弄清该声明的办法是从右往左读，首先是常量指针，指向的对象是双精度浮点型常量。 1const double *const pip;  只有指针指向常量，才不能通过指针修改对象值。 const int *p">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-09-10T13:30:24.000Z">
+<meta property="article:modified_time" content="2021-09-16T15:12:44.016Z">
 <meta property="article:author" content="LY">
+<meta property="article:tag" content="notes">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://plauenly.github.io/archives/2021/">
+<link rel="canonical" href="http://plauenly.github.io/2021/09/10/C-Primer-%E7%AC%AC%E5%9B%9B%E6%AC%A1%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
 
 
 <script id="page-configurations">
@@ -36,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>الأرشيف | LY's Blog</title>
+  <title>C++_Primer_第四次阅读 | LY's Blog</title>
   
 
 
@@ -140,134 +145,95 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">هِم..! 8 مقالاً بالمُجمل. واصل الكتابة.</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2021/09/10/C-Primer-%E7%AC%AC%E5%9B%9B%E6%AC%A1%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LY">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LY's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++_Primer_第四次阅读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">نُشر في</span>
+
+              <time title="أُنشأ: 2021-09-10 21:30:24" itemprop="dateCreated datePublished" datetime="2021-09-10T21:30:24+08:00">2021-09-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">عُدل في</span>
+                <time title="عُدل: 2021-09-16 23:12:44" itemprop="dateModified" datetime="2021-09-16T23:12:44+08:00">2021-09-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
+        <p>使用”```”再加回车键，可以附上代码。</p>
+<p>弄清该声明的办法是从右往左读，首先是常量指针，指向的对象是双精度浮点型常量。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">double</span> *<span class="keyword">const</span> pip;</span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-16T22:43:32+08:00"
-              content="2021-09-16">
-          09-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/16/%E6%8F%90%E9%86%92%E4%B8%80/" itemprop="url">
-            <span itemprop="name">提醒一</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-10T21:30:24+08:00"
-              content="2021-09-10">
-          09-10
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/10/C-Primer-%E7%AC%AC%E5%9B%9B%E6%AC%A1%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" itemprop="url">
-            <span itemprop="name">C++_Primer_第四次阅读</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-09T20:19:53+08:00"
-              content="2021-09-09">
-          09-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/09/%E7%94%9F%E6%B4%BB%E6%9C%89%E6%84%9F%E4%B8%80/" itemprop="url">
-            <span itemprop="name">生活有感一</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-09T10:03:16+08:00"
-              content="2021-09-09">
-          09-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/09/C-Primer-%E7%AC%AC%E4%B8%89%E6%AC%A1%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" itemprop="url">
-            <span itemprop="name">C++_Primer_第三次阅读笔记</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-08T21:40:54+08:00"
-              content="2021-09-08">
-          09-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/08/c-Primer-%E7%AC%AC%E4%BA%8C%E6%AC%A1%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" itemprop="url">
-            <span itemprop="name">C++_Primer_第二次阅读笔记</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+<p>只有指针指向常量，才不能通过指针修改对象值。</p>
+<p>const int *p</p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/notes/" rel="tag"># notes</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/09/%E7%94%9F%E6%B4%BB%E6%9C%89%E6%84%9F%E4%B8%80/" rel="prev" title="生活有感一">
+      <i class="fa fa-chevron-left"></i> 生活有感一
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/16/%E6%8F%90%E9%86%92%E4%B8%80/" rel="next" title="提醒一">
+      提醒一 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2021/page/2/">2</a><a class="extend next" rel="next" href="/archives/2021/page/2/"><i class="fa fa-angle-right" aria-label="الصفحة التالية"></i></a>
-  </nav>
+  
+  
 
 
 
