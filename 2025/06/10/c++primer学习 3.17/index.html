@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="网络编程Tcp协议：面向连接，可靠，全双工，字节流，流量控制的协议在复杂的网络环境中确定一个进程，需要ip地址+端口号 字节序：x86系统采用小端存储（低地址存低位），网络数据采用大端存储（低地址存高位）。小同（小端相同）所以需要使用字节序转换。 使用socket编程，实现数据在不同设备，不同平台之间传输 状态迁移：服务器端状态：LISTEN，ESTABLISHED（被动受到请求）状态：FIN_W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LY&#39;s Blog">
+<meta property="og:url" content="http://plauenly.github.io/2025/06/10/c++primer%E5%AD%A6%E4%B9%A0%203.17/index.html">
+<meta property="og:site_name" content="LY&#39;s Blog">
+<meta property="og:description" content="网络编程Tcp协议：面向连接，可靠，全双工，字节流，流量控制的协议在复杂的网络环境中确定一个进程，需要ip地址+端口号 字节序：x86系统采用小端存储（低地址存低位），网络数据采用大端存储（低地址存高位）。小同（小端相同）所以需要使用字节序转换。 使用socket编程，实现数据在不同设备，不同平台之间传输 状态迁移：服务器端状态：LISTEN，ESTABLISHED（被动受到请求）状态：FIN_W">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-10T05:53:54.704Z">
+<meta property="article:modified_time" content="2025-06-10T13:44:28.050Z">
+<meta property="article:author" content="LY">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://plauenly.github.io/2025/06/10/c++primer%E5%AD%A6%E4%B9%A0%203.17/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | LY's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LY's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Plauen-Ly</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2025/06/10/c++primer%E5%AD%A6%E4%B9%A0%203.17/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LY">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LY's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-06-10 13:53:54 / 修改时间：21:44:28" itemprop="dateCreated datePublished" datetime="2025-06-10T13:53:54+08:00">2025-06-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="网络编程"><a href="#网络编程" class="headerlink" title="网络编程"></a>网络编程</h3><p>Tcp协议：面向连接，可靠，全双工，字节流，流量控制的协议<br>在复杂的网络环境中确定一个进程，需要ip地址+端口号</p>
+<p>字节序：<br>x86系统采用小端存储（低地址存低位），网络数据采用大端存储（低地址存高位）。小同（小端相同）<br>所以需要使用字节序转换。</p>
+<p>使用socket编程，实现数据在不同设备，不同平台之间传输</p>
+<p>状态迁移：<br>服务器端状态：LISTEN，ESTABLISHED（被动受到请求）<br>状态：FIN_WAIT2，TIME_WAIT（主动断开连接），CLOSE_WAIT（被动断开连接）</p>
+<p>网络通信的常规函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//将本机地址字符串转换为网络字节序</span></span><br><span class="line"><span class="function"><span class="keyword">in_addr_t</span> <span class="title">inet_addr</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* cp)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">socket</span><span class="params">(<span class="keyword">int</span> domain, <span class="keyword">int</span> type, <span class="keyword">int</span> protocol)</span></span></span><br><span class="line"><span class="function">    <span class="comment">//domain : AF_INET/AF_UNIX/AF_INET6（AF_INET = IPV4）</span></span></span><br><span class="line"><span class="function">    <span class="comment">//type : SOCK_STREAM/SOCK_DGRAM（SOCK_STREAM = TCP，SOCT_DGRAM = UDP）</span></span></span><br><span class="line"><span class="function">    <span class="comment">//protocol : 0</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//创建成功返回新的socket的文件描述符，否则返回-1</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//绑定自己的ip地址和端口号</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bind</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct sockaddr *addr, <span class="keyword">socklen_t</span> addrlen)</span></span></span><br><span class="line"><span class="function"><span class="comment">//addr传入参数，绑定自己（服务器端）的地址信息</span></span></span><br><span class="line"><span class="function"><span class="comment">//成功返回0，否则-1</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//监听客户端发起的连接请求</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">listen</span><span class="params">(<span class="keyword">int</span> sockefd, <span class="keyword">int</span> backlog)</span></span></span><br><span class="line"><span class="function"><span class="comment">//backlog 制定用于监听的连接请求上限</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//接受连接请求的函数，阻塞以等待客户端发起连接</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">accept</span><span class="params">(<span class="keyword">int</span> sockfd, struct sockaddr *addr, <span class="keyword">socklen_t</span> *addrlen)</span></span></span><br><span class="line"><span class="function"><span class="comment">//addr,addrlen都为传出参数，返回连接客户端的地址信息</span></span></span><br><span class="line"><span class="function"><span class="comment">//成功返回一个新的文件描述符，该描述符用于与客户端通信，否则返回-1</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span></span><br><span class="line"><span class="function"><span class="comment">//关闭通信</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//客户端连接服务器</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">connect</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct sockaddr *addr, <span class="keyword">socklen_t</span> addrlen)</span></span></span><br><span class="line"><span class="function"><span class="comment">//addr：传入参数，要连接的服务器端的地址信息</span></span></span><br><span class="line"><span class="function"><span class="comment">//成功返回0,否则-1</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">struct sockaddr_in</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">sa_family_t</span> sin_family;</span><br><span class="line">    <span class="keyword">in_port_t</span> sin_port;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span> <span class="title">sin_addr</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> s_addr</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>读写函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">//该函数默认为阻塞函数，会一直等到另一端数据传送到达</span></span><br><span class="line"><span class="function"><span class="keyword">sszie_t</span> <span class="title">read</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count)</span></span>;</span><br><span class="line"><span class="comment">//返回值：实际读到的数据长度，-1表示失败，0表示读完（文件末尾，socket末尾，对端关闭）</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">sszie_t</span> <span class="title">recv</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count, <span class="keyword">int</span> flags)</span></span>;</span><br><span class="line"><span class="comment">//如果flags = 0表示与read等价</span></span><br><span class="line"><span class="comment">//如果flags = MSG_PEEK：将内核缓冲区中的数据拷贝出来，并且保留其中的数据。</span></span><br><span class="line"><span class="comment">//read函数，将内核缓冲区中的数据读出，并移除其中的数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//写函数类似于读函数</span></span><br></pre></td></tr></table></figure>
+
+<p><code> netstat -apn</code>打印本机网络信息<br>哪端先请求断开连接，哪端就会进入TIME_WAIT(等待2MSL时间)的阶段<br>使用<code> setsockopt()</code>函数可以实现端口和地址复用。<br><code> netstat -apn | grep port_id</code>，找到端口相关的进程，<code> kill -9 pid</code>关闭该进程进而释放端口。</p>
+<h3 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h3><p>传入传出参数：该参数通常为指针或引用形式，需要在传入时设置值，在函数结束时其值可能发生改变。</p>
+<p>位图：非常大的数组，数组只存放0或1的数据，数组的下标就是查找的对象。如fd_set的下标就是fd号。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//作用：监视多个文件描述符</span></span><br><span class="line"><span class="comment">//如果监听的文件描述中由读，写，异常的行为，则将对应的位图置为1，没有的行为置为0。</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">select</span><span class="params">(<span class="keyword">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将timeout = NULL，则select函数将一直等到至少有一个fd活动为止。</span></span><br><span class="line"><span class="comment">//readfds表示对端写，本端读，</span></span><br><span class="line"><span class="comment">//当对端先关闭连接时，本端的select函数检测到后会在readfds中相应fd上置为1，使用read函数后将返回0（连接关闭）。</span></span><br></pre></td></tr></table></figure>
+
+<p>select()与poll()在存在大量并发连接但却只有<strong>少量活跃连接</strong>的情况下，仍需要遍历整个fd数组，效率比较低<br>解决办法：使用epoll()</p>
+<p>水平触发（LT，默认）：<br>当文件描述符关联的读内核缓冲区非空时（即有数据可读），就一直发出可读信号进行通知，直到读完为止<br>；当关联的写内核缓冲区非满（即有空间写数据），就一直发写信号进行通知。<br>（这就解释了为什么当fd激活而没有处理时，会进入死循环（针对~/tmp/train_inet/server.c中select的代码））<br>边缘触发（ET）：<br>当fd关联的读内核缓冲区有可读数据进入时，仅仅发出一次读信号；同样也仅仅发出一次写信号。</p>
+<h3 id="文件描述符-fd"><a href="#文件描述符-fd" class="headerlink" title="文件描述符(fd)"></a>文件描述符(fd)</h3><p>文件描述符在形式上是一个<strong>非负整数</strong>。实际上它是一个索引值，指向内核为每一个进程所维护的该进程打开文件的记录表。<br>当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。</p>
+<p>0：标准输入<br>1：标准输出<br>2：错误输出</p>
+<p>自己创建的文件描述符从3开始依次递增，当中间的文件描述符被删除，新增的文件描述符存放在删除点并从此处开始递增。<br>e.g.<br>0 1 2 3 4 5<br>0 1 2 4 5       删除3<br>0 1 2 3 4 5     新增的放在3</p>
+<h3 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h3><p>输入<code> :bd</code>关闭当前文件<br>输入<code> %</code>跳转到括号对应的另一端括号上</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/06/20/%E8%80%83%E7%A0%94%E6%97%A5%E5%BF%97%EF%BC%881%EF%BC%89/" rel="prev" title="考研日志（1）">
+      <i class="fa fa-chevron-left"></i> 考研日志（1）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/10/GAMES101_4_16/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">网络编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">IO多路复用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6-fd"><span class="nav-number">3.</span> <span class="nav-text">文件描述符(fd)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim"><span class="nav-number">4.</span> <span class="nav-text">vim</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LY</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LY</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

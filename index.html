@@ -146,6 +146,197 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2025/06/10/GAMES101_4_16/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LY">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LY's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/10/GAMES101_4_16/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-06-10 13:53:59 / 修改时间：21:45:13" itemprop="dateCreated datePublished" datetime="2025-06-10T13:53:59+08:00">2025-06-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一。绪论"><a href="#一。绪论" class="headerlink" title="一。绪论"></a>一。绪论</h3><p>应用领域：</p>
+<ol>
+<li>光线渲染</li>
+<li>卡通人物</li>
+<li>电影特效</li>
+<li>动作捕捉</li>
+<li>动物毛发</li>
+<li>模拟动画/仿真</li>
+<li>设计</li>
+<li>可视化/GUI</li>
+<li>VR/AR</li>
+<li>PS</li>
+<li>字体</li>
+</ol>
+<p>计算机视觉：需要猜测的内容</p>
+<h3 id="二。向量"><a href="#二。向量" class="headerlink" title="二。向量"></a>二。向量</h3><p>默认向量为：列向量<br>点乘：可以算出两个向量之间的夹角，向量的投影和分解，判断向量之间的前后关系<br>叉乘：（右手螺旋定则），判断向量的左右和内外</p>
+<h3 id="三。变换"><a href="#三。变换" class="headerlink" title="三。变换"></a>三。变换</h3><p>视图变换，模型变换</p>
+<p>线性变换：A’ = MA(M为方阵)此时就为线性变换， 因为e.g. y’ = ax+by+cz</p>
+<p>”通常“变换：旋转（默认旋转方向为逆时针，且绕原点旋转），切片，缩放，反转。</p>
+<p>平移（”特殊“的变换，引入齐次坐标可以变为线性变换）<br>齐次坐标（homogeneous coordinates）：在二维坐标中引入第三维度, 其中0（表示向量）,1（表示点）<br>即(x, y, w)point = (x/w, y/w)point, if w != 0.</p>
+<p>向量具有平移不变性，即平移以后的向量与原向量相等</p>
+<p>仿射变换：线性变换+平移变换（先线性，后平移）</p>
+<p>如何绕一个给定点c旋转呢？<br>答：先平移到原点再旋转，最后再平移回去</p>
+<p>行列式值为+1的正交矩阵，称为特殊正交矩阵，它是一个旋转矩阵。<br>（因此旋转矩阵的逆 == 旋转矩阵的转置）<br>变换矩阵的逆矩阵 就相当于 该变换的逆操作</p>
+<h3 id="三。1-3D变换"><a href="#三。1-3D变换" class="headerlink" title="三。1 3D变换"></a>三。1 3D变换</h3><p>任意3维上旋转可以分解为绕xyz轴的旋转（欧拉角）<br>罗德里格思变换公式<br>4元数：用于处理旋转矩阵之间和差的问题</p>
+<h3 id="四。视图变换"><a href="#四。视图变换" class="headerlink" title="四。视图变换"></a>四。视图变换</h3><p>类比拍照的步骤：建模，找角度（视图与模型变换），投影</p>
+<p>规定：相机看向模型的方向记为g轴，相机向上铅垂方向记为t轴<br>包括相机所在的空间中有一个默认的标准xyz轴。</p>
+<p>约定：拍照的相机位置应该位于原点，且相机永远朝向-z轴方向看，并且向上角为y轴。<br>为了达到约定，需要对相机（视图变换）与模型（模型变换）进行相同的变换。<br>该变换矩阵可以通过  逆旋转矩阵 来求，即 求如何将标准的xyz轴旋转为相机的g轴，t轴与gXt轴的旋转矩阵，再求逆。</p>
+<p>右手坐标系：x X y == z</p>
+<p>透视投影（近大远小），正交投影</p>
+<p>正交投影(理解)：</p>
+<ol>
+<li>将相机摆放好（视图与模型变换）。</li>
+<li>“去掉”z轴，将模型全部压缩到xoy平面上</li>
+<li>变换平面到[-1,1]^2 </li>
+</ol>
+<p>正交投影（实际操作）：<br>将定义好的视域移动和缩放到canonical(正则，规范，标准)的立方体上，即[-1,1]^3.</p>
+<p>透视投影与正交投影的区别：透视投影的远平面更大近平面更小（视锥），而正交投影为相同大小（视域）</p>
+<p>透视投影(应用最广泛的投影)的操作：</p>
+<ol>
+<li>将远平面压缩为和近平面同样大小</li>
+<li>作正交投影</li>
+</ol>
+<p>挤压远平面的规定：</p>
+<ol>
+<li>与平面垂直的z轴，平面对应的z轴上的值不变</li>
+<li>平面的中心点绝对位置不变</li>
+<li>近平面在挤压的过程不受影响</li>
+</ol>
+<p>将物体“挤压”为正交投影</p>
+<h3 id="五。三角形光栅化"><a href="#五。三角形光栅化" class="headerlink" title="五。三角形光栅化"></a>五。三角形光栅化</h3><h3 id="六。c-学习"><a href="#六。c-学习" class="headerlink" title="六。c++学习"></a>六。c++学习</h3><p>const与constexpr之间的区别（暂时）：<br>const 用于表达“只读”的语义，而constexpr 用于表达 “常量”的语义。</p>
+<h3 id="七。EIgen学习"><a href="#七。EIgen学习" class="headerlink" title="七。EIgen学习"></a>七。EIgen学习</h3><p>typedef Matrix&lt;float, 3, 1&gt; Vector3f(默认为列向量)<br>typedef Matrix&lt;float, 4, 4&gt; Matrix4f</p>
+<p>Arithmetic operators just return an “expression object” describing the computation to be performed. The actual computation happens later,<br>Don’t be afraid of using relatively large arithmetic expressions with Eigen<br>可以分别使用transpose(),conjugate(),adjoint()函数来求矩阵的转置，共轭，伴随（应该是伴随，翻译的是共轭转置）</p>
+<p>identity()函数即创建对应大小的单位矩阵</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2025/06/10/c++primer%E5%AD%A6%E4%B9%A0%203.17/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LY">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LY's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/10/c++primer%E5%AD%A6%E4%B9%A0%203.17/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-06-10 13:53:54 / 修改时间：21:44:28" itemprop="dateCreated datePublished" datetime="2025-06-10T13:53:54+08:00">2025-06-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="网络编程"><a href="#网络编程" class="headerlink" title="网络编程"></a>网络编程</h3><p>Tcp协议：面向连接，可靠，全双工，字节流，流量控制的协议<br>在复杂的网络环境中确定一个进程，需要ip地址+端口号</p>
+<p>字节序：<br>x86系统采用小端存储（低地址存低位），网络数据采用大端存储（低地址存高位）。小同（小端相同）<br>所以需要使用字节序转换。</p>
+<p>使用socket编程，实现数据在不同设备，不同平台之间传输</p>
+<p>状态迁移：<br>服务器端状态：LISTEN，ESTABLISHED（被动受到请求）<br>状态：FIN_WAIT2，TIME_WAIT（主动断开连接），CLOSE_WAIT（被动断开连接）</p>
+<p>网络通信的常规函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//将本机地址字符串转换为网络字节序</span></span><br><span class="line"><span class="function"><span class="keyword">in_addr_t</span> <span class="title">inet_addr</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* cp)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">socket</span><span class="params">(<span class="keyword">int</span> domain, <span class="keyword">int</span> type, <span class="keyword">int</span> protocol)</span></span></span><br><span class="line"><span class="function">    <span class="comment">//domain : AF_INET/AF_UNIX/AF_INET6（AF_INET = IPV4）</span></span></span><br><span class="line"><span class="function">    <span class="comment">//type : SOCK_STREAM/SOCK_DGRAM（SOCK_STREAM = TCP，SOCT_DGRAM = UDP）</span></span></span><br><span class="line"><span class="function">    <span class="comment">//protocol : 0</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//创建成功返回新的socket的文件描述符，否则返回-1</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//绑定自己的ip地址和端口号</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bind</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct sockaddr *addr, <span class="keyword">socklen_t</span> addrlen)</span></span></span><br><span class="line"><span class="function"><span class="comment">//addr传入参数，绑定自己（服务器端）的地址信息</span></span></span><br><span class="line"><span class="function"><span class="comment">//成功返回0，否则-1</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//监听客户端发起的连接请求</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">listen</span><span class="params">(<span class="keyword">int</span> sockefd, <span class="keyword">int</span> backlog)</span></span></span><br><span class="line"><span class="function"><span class="comment">//backlog 制定用于监听的连接请求上限</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//接受连接请求的函数，阻塞以等待客户端发起连接</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">accept</span><span class="params">(<span class="keyword">int</span> sockfd, struct sockaddr *addr, <span class="keyword">socklen_t</span> *addrlen)</span></span></span><br><span class="line"><span class="function"><span class="comment">//addr,addrlen都为传出参数，返回连接客户端的地址信息</span></span></span><br><span class="line"><span class="function"><span class="comment">//成功返回一个新的文件描述符，该描述符用于与客户端通信，否则返回-1</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span></span><br><span class="line"><span class="function"><span class="comment">//关闭通信</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//客户端连接服务器</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">connect</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct sockaddr *addr, <span class="keyword">socklen_t</span> addrlen)</span></span></span><br><span class="line"><span class="function"><span class="comment">//addr：传入参数，要连接的服务器端的地址信息</span></span></span><br><span class="line"><span class="function"><span class="comment">//成功返回0,否则-1</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">struct sockaddr_in</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">sa_family_t</span> sin_family;</span><br><span class="line">    <span class="keyword">in_port_t</span> sin_port;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span> <span class="title">sin_addr</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> s_addr</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>读写函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">//该函数默认为阻塞函数，会一直等到另一端数据传送到达</span></span><br><span class="line"><span class="function"><span class="keyword">sszie_t</span> <span class="title">read</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count)</span></span>;</span><br><span class="line"><span class="comment">//返回值：实际读到的数据长度，-1表示失败，0表示读完（文件末尾，socket末尾，对端关闭）</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">sszie_t</span> <span class="title">recv</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count, <span class="keyword">int</span> flags)</span></span>;</span><br><span class="line"><span class="comment">//如果flags = 0表示与read等价</span></span><br><span class="line"><span class="comment">//如果flags = MSG_PEEK：将内核缓冲区中的数据拷贝出来，并且保留其中的数据。</span></span><br><span class="line"><span class="comment">//read函数，将内核缓冲区中的数据读出，并移除其中的数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//写函数类似于读函数</span></span><br></pre></td></tr></table></figure>
+
+<p><code> netstat -apn</code>打印本机网络信息<br>哪端先请求断开连接，哪端就会进入TIME_WAIT(等待2MSL时间)的阶段<br>使用<code> setsockopt()</code>函数可以实现端口和地址复用。<br><code> netstat -apn | grep port_id</code>，找到端口相关的进程，<code> kill -9 pid</code>关闭该进程进而释放端口。</p>
+<h3 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h3><p>传入传出参数：该参数通常为指针或引用形式，需要在传入时设置值，在函数结束时其值可能发生改变。</p>
+<p>位图：非常大的数组，数组只存放0或1的数据，数组的下标就是查找的对象。如fd_set的下标就是fd号。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//作用：监视多个文件描述符</span></span><br><span class="line"><span class="comment">//如果监听的文件描述中由读，写，异常的行为，则将对应的位图置为1，没有的行为置为0。</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">select</span><span class="params">(<span class="keyword">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将timeout = NULL，则select函数将一直等到至少有一个fd活动为止。</span></span><br><span class="line"><span class="comment">//readfds表示对端写，本端读，</span></span><br><span class="line"><span class="comment">//当对端先关闭连接时，本端的select函数检测到后会在readfds中相应fd上置为1，使用read函数后将返回0（连接关闭）。</span></span><br></pre></td></tr></table></figure>
+
+<p>select()与poll()在存在大量并发连接但却只有<strong>少量活跃连接</strong>的情况下，仍需要遍历整个fd数组，效率比较低<br>解决办法：使用epoll()</p>
+<p>水平触发（LT，默认）：<br>当文件描述符关联的读内核缓冲区非空时（即有数据可读），就一直发出可读信号进行通知，直到读完为止<br>；当关联的写内核缓冲区非满（即有空间写数据），就一直发写信号进行通知。<br>（这就解释了为什么当fd激活而没有处理时，会进入死循环（针对~/tmp/train_inet/server.c中select的代码））<br>边缘触发（ET）：<br>当fd关联的读内核缓冲区有可读数据进入时，仅仅发出一次读信号；同样也仅仅发出一次写信号。</p>
+<h3 id="文件描述符-fd"><a href="#文件描述符-fd" class="headerlink" title="文件描述符(fd)"></a>文件描述符(fd)</h3><p>文件描述符在形式上是一个<strong>非负整数</strong>。实际上它是一个索引值，指向内核为每一个进程所维护的该进程打开文件的记录表。<br>当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。</p>
+<p>0：标准输入<br>1：标准输出<br>2：错误输出</p>
+<p>自己创建的文件描述符从3开始依次递增，当中间的文件描述符被删除，新增的文件描述符存放在删除点并从此处开始递增。<br>e.g.<br>0 1 2 3 4 5<br>0 1 2 4 5       删除3<br>0 1 2 3 4 5     新增的放在3</p>
+<h3 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h3><p>输入<code> :bd</code>关闭当前文件<br>输入<code> %</code>跳转到括号对应的另一端括号上</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2023/06/20/%E8%80%83%E7%A0%94%E6%97%A5%E5%BF%97%EF%BC%881%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -753,7 +944,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
