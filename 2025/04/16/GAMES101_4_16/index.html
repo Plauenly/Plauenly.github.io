@@ -20,16 +20,16 @@
     var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="一。绪论应用领域：  光线渲染 卡通人物 电影特效 动作捕捉 动物毛发 模拟动画&#x2F;仿真 设计 可视化&#x2F;GUI VR&#x2F;AR PS 字体  计算机视觉：需要猜测的内容 二。向量默认向量为：列向量点乘：可以算出两个向量之间的夹角，向量的投影和分解，判断向量之间的前后关系叉乘：（右手螺旋定则），判断向量的左右和内外 三。变换视图变换，模型变换 线性变换：A’ &#x3D; MA(M为方阵)此时就为线性变换， 因为e">
+  <meta name="description" content="一. 绪论计算机图形学的应用领域：  光线渲染 卡通人物 电影特效 动作捕捉 动物毛发 模拟动画&#x2F;仿真 设计 可视化&#x2F;GUI VR&#x2F;AR PS 字体  区分于计算机视觉，计算机视觉：需要猜测的内容 二. 向量默认向量为：列向量点乘：可以算出两个向量之间的夹角，向量的投影和分解，判断向量之间的前后关系叉乘：（右手螺旋定则），判断向量的左右和内外 三. 变换视图变换，模型变换 线性变换：A’ &#x3D; MA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机图形学学习笔记">
 <meta property="og:url" content="http://plauenly.github.io/2025/04/16/GAMES101_4_16/index.html">
 <meta property="og:site_name" content="LY&#39;s Blog">
-<meta property="og:description" content="一。绪论应用领域：  光线渲染 卡通人物 电影特效 动作捕捉 动物毛发 模拟动画&#x2F;仿真 设计 可视化&#x2F;GUI VR&#x2F;AR PS 字体  计算机视觉：需要猜测的内容 二。向量默认向量为：列向量点乘：可以算出两个向量之间的夹角，向量的投影和分解，判断向量之间的前后关系叉乘：（右手螺旋定则），判断向量的左右和内外 三。变换视图变换，模型变换 线性变换：A’ &#x3D; MA(M为方阵)此时就为线性变换， 因为e">
+<meta property="og:description" content="一. 绪论计算机图形学的应用领域：  光线渲染 卡通人物 电影特效 动作捕捉 动物毛发 模拟动画&#x2F;仿真 设计 可视化&#x2F;GUI VR&#x2F;AR PS 字体  区分于计算机视觉，计算机视觉：需要猜测的内容 二. 向量默认向量为：列向量点乘：可以算出两个向量之间的夹角，向量的投影和分解，判断向量之间的前后关系叉乘：（右手螺旋定则），判断向量的左右和内外 三. 变换视图变换，模型变换 线性变换：A’ &#x3D; MA">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-16T13:00:59.000Z">
-<meta property="article:modified_time" content="2025-06-10T06:20:19.428Z">
-<meta property="article:author" content="LY">
+<meta property="article:modified_time" content="2025-12-03T01:58:12.188Z">
+<meta property="article:author" content="LiYi">
 <meta property="article:tag" content="dialog">
 <meta name="twitter:card" content="summary">
 
@@ -156,7 +156,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="LY">
+      <meta itemprop="name" content="LiYi">
       <meta itemprop="description" content="">
     </span>
 
@@ -182,7 +182,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-06-10 14:20:19" itemprop="dateModified" datetime="2025-06-10T14:20:19+08:00">2025-06-10</time>
+                <time title="修改时间：2025-12-03 09:58:12" itemprop="dateModified" datetime="2025-12-03T09:58:12+08:00">2025-12-03</time>
               </span>
 
           
@@ -196,7 +196,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="一。绪论"><a href="#一。绪论" class="headerlink" title="一。绪论"></a>一。绪论</h3><p>应用领域：</p>
+        <h3 id="一-绪论"><a href="#一-绪论" class="headerlink" title="一. 绪论"></a>一. 绪论</h3><p>计算机图形学的应用领域：</p>
 <ol>
 <li>光线渲染</li>
 <li>卡通人物</li>
@@ -210,9 +210,9 @@
 <li>PS</li>
 <li>字体</li>
 </ol>
-<p>计算机视觉：需要猜测的内容</p>
-<h3 id="二。向量"><a href="#二。向量" class="headerlink" title="二。向量"></a>二。向量</h3><p>默认向量为：列向量<br>点乘：可以算出两个向量之间的夹角，向量的投影和分解，判断向量之间的前后关系<br>叉乘：（右手螺旋定则），判断向量的左右和内外</p>
-<h3 id="三。变换"><a href="#三。变换" class="headerlink" title="三。变换"></a>三。变换</h3><p>视图变换，模型变换</p>
+<p>区分于计算机视觉，计算机视觉：需要猜测的内容</p>
+<h3 id="二-向量"><a href="#二-向量" class="headerlink" title="二. 向量"></a>二. 向量</h3><p>默认向量为：列向量<br>点乘：可以算出两个向量之间的夹角，向量的投影和分解，判断向量之间的前后关系<br>叉乘：（右手螺旋定则），判断向量的左右和内外</p>
+<h3 id="三-变换"><a href="#三-变换" class="headerlink" title="三. 变换"></a>三. 变换</h3><p>视图变换，模型变换</p>
 <p>线性变换：A’ = MA(M为方阵)此时就为线性变换， 因为e.g. y’ = ax+by+cz</p>
 <p>”通常“变换：旋转（默认旋转方向为逆时针，且绕原点旋转），切片，缩放，反转。</p>
 <p>平移（”特殊“的变换，引入齐次坐标可以变为线性变换）<br>齐次坐标（homogeneous coordinates）：在二维坐标中引入第三维度, 其中0（表示向量）,1（表示点）<br>即(x, y, w)point = (x/w, y/w)point, if w != 0.</p>
@@ -220,8 +220,8 @@
 <p>仿射变换：线性变换+平移变换（先线性，后平移）</p>
 <p>如何绕一个给定点c旋转呢？<br>答：先平移到原点再旋转，最后再平移回去</p>
 <p>行列式值为+1的正交矩阵，称为特殊正交矩阵，它是一个旋转矩阵。<br>（因此旋转矩阵的逆 == 旋转矩阵的转置）<br>变换矩阵的逆矩阵 就相当于 该变换的逆操作</p>
-<h3 id="三。1-3D变换"><a href="#三。1-3D变换" class="headerlink" title="三。1 3D变换"></a>三。1 3D变换</h3><p>任意3维上旋转可以分解为绕xyz轴的旋转（欧拉角）<br>罗德里格思变换公式<br>4元数：用于处理旋转矩阵之间和差的问题</p>
-<h3 id="四。视图变换"><a href="#四。视图变换" class="headerlink" title="四。视图变换"></a>四。视图变换</h3><p>类比拍照的步骤：建模，找角度（视图与模型变换），投影</p>
+<p>任意3维上旋转可以分解为绕xyz轴的旋转（欧拉角）<br>罗德里格思变换公式<br>4元数：用于处理旋转矩阵之间和差的问题</p>
+<h3 id="四-视图变换"><a href="#四-视图变换" class="headerlink" title="四. 视图变换"></a>四. 视图变换</h3><p>类比拍照的步骤：建模，找角度（视图与模型变换），投影</p>
 <p>规定：相机看向模型的方向记为g轴，相机向上铅垂方向记为t轴<br>包括相机所在的空间中有一个默认的标准xyz轴。</p>
 <p>约定：拍照的相机位置应该位于原点，且相机永远朝向-z轴方向看，并且向上角为y轴。<br>为了达到约定，需要对相机（视图变换）与模型（模型变换）进行相同的变换。<br>该变换矩阵可以通过  逆旋转矩阵 来求，即 求如何将标准的xyz轴旋转为相机的g轴，t轴与gXt轴的旋转矩阵，再求逆。</p>
 <p>右手坐标系：x X y == z</p>
@@ -246,8 +246,9 @@
 <li>近平面在挤压的过程不受影响</li>
 </ol>
 <p>将物体“挤压”为正交投影</p>
-<h3 id="五。三角形光栅化"><a href="#五。三角形光栅化" class="headerlink" title="五。三角形光栅化"></a>五。三角形光栅化</h3><h3 id="六。c-学习"><a href="#六。c-学习" class="headerlink" title="六。c++学习"></a>六。c++学习</h3><p>const与constexpr之间的区别（暂时）：<br>const 用于表达“只读”的语义，而constexpr 用于表达 “常量”的语义。</p>
-<h3 id="七。EIgen学习"><a href="#七。EIgen学习" class="headerlink" title="七。EIgen学习"></a>七。EIgen学习</h3><p>typedef Matrix&lt;float, 3, 1&gt; Vector3f(默认为列向量)<br>typedef Matrix&lt;float, 4, 4&gt; Matrix4f</p>
+<h3 id="六-c-学习"><a href="#六-c-学习" class="headerlink" title="六. c++学习"></a>六. c++学习</h3><p>const与constexpr之间的区别：<br>const 用于表达“只读”的语义，而constexpr 用于表达 “常量”的语义。</p>
+<h3 id="七-EIgen学习"><a href="#七-EIgen学习" class="headerlink" title="七. EIgen学习"></a>七. EIgen学习</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> Matrix&lt;<span class="keyword">float</span>, 3, 1&gt; <span class="title">Vector3f</span><span class="params">(默认为列向量)</span></span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> Matrix&lt;<span class="keyword">float</span>, 4, 4&gt; Matrix4f</span></span><br></pre></td></tr></table></figure>
+
 <p>Arithmetic operators just return an “expression object” describing the computation to be performed. The actual computation happens later,<br>Don’t be afraid of using relatively large arithmetic expressions with Eigen<br>可以分别使用transpose(),conjugate(),adjoint()函数来求矩阵的转置，共轭，伴随（应该是伴随，翻译的是共轭转置）</p>
 <p>identity()函数即创建对应大小的单位矩阵</p>
 
@@ -268,10 +269,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/03/17/c++primer%E5%AD%A6%E4%B9%A0%203.17/" rel="prev" title="c++primer学习 3.17">
-      <i class="fa fa-chevron-left"></i> c++primer学习 3.17
+    <a href="/2023/06/20/%E8%80%83%E7%A0%94%E6%97%A5%E8%AE%B0/" rel="prev" title="考研日志（1）">
+      <i class="fa fa-chevron-left"></i> 考研日志（1）
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/12/03/hello-world/" rel="next" title="Hello World">
+      Hello World <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -330,13 +334,13 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%82%E7%BB%AA%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">一。绪论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%82%E5%90%91%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">二。向量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%82%E5%8F%98%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">三。变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%821-3D%E5%8F%98%E6%8D%A2"><span class="nav-number">4.</span> <span class="nav-text">三。1 3D变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%82%E8%A7%86%E5%9B%BE%E5%8F%98%E6%8D%A2"><span class="nav-number">5.</span> <span class="nav-text">四。视图变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%82%E4%B8%89%E8%A7%92%E5%BD%A2%E5%85%89%E6%A0%85%E5%8C%96"><span class="nav-number">6.</span> <span class="nav-text">五。三角形光栅化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD%E3%80%82c-%E5%AD%A6%E4%B9%A0"><span class="nav-number">7.</span> <span class="nav-text">六。c++学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%83%E3%80%82EIgen%E5%AD%A6%E4%B9%A0"><span class="nav-number">8.</span> <span class="nav-text">七。EIgen学习</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80-%E7%BB%AA%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">一. 绪论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C-%E5%90%91%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">二. 向量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89-%E5%8F%98%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">三. 变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B-%E8%A7%86%E5%9B%BE%E5%8F%98%E6%8D%A2"><span class="nav-number">4.</span> <span class="nav-text">四. 视图变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD-c-%E5%AD%A6%E4%B9%A0"><span class="nav-number">5.</span> <span class="nav-text">六. c++学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%83-EIgen%E5%AD%A6%E4%B9%A0"><span class="nav-number">6.</span> <span class="nav-text">七. EIgen学习</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">LY</p>
+  <p class="site-author-name" itemprop="name">LiYi</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap motion-element">
@@ -344,7 +348,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -380,7 +384,7 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">LY</span>
+  <span class="author" itemprop="copyrightHolder">LiYi</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
