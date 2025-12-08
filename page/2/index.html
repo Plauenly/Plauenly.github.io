@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2025/04/16/GAMES101_4_16/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2025/12/04/2025-12-04-%E6%97%A5%E5%BF%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/04/16/GAMES101_4_16/" class="post-title-link" itemprop="url">计算机图形学学习笔记</a>
+            <a href="/2025/12/04/2025-12-04-%E6%97%A5%E5%BF%97/" class="post-title-link" itemprop="url">2025-12-04-日志</a>
         </h2>
 
         <div class="post-meta">
@@ -169,16 +169,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2025-04-16 21:00:59" itemprop="dateCreated datePublished" datetime="2025-04-16T21:00:59+08:00">2025-04-16</time>
+              <time title="创建时间：2025-12-04 21:25:44 / 修改时间：21:37:56" itemprop="dateCreated datePublished" datetime="2025-12-04T21:25:44+08:00">2025-12-04</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-12-03 09:58:12" itemprop="dateModified" datetime="2025-12-03T09:58:12+08:00">2025-12-03</time>
-              </span>
 
           
 
@@ -191,61 +185,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="一-绪论"><a href="#一-绪论" class="headerlink" title="一. 绪论"></a>一. 绪论</h3><p>计算机图形学的应用领域：</p>
-<ol>
-<li>光线渲染</li>
-<li>卡通人物</li>
-<li>电影特效</li>
-<li>动作捕捉</li>
-<li>动物毛发</li>
-<li>模拟动画/仿真</li>
-<li>设计</li>
-<li>可视化/GUI</li>
-<li>VR/AR</li>
-<li>PS</li>
-<li>字体</li>
-</ol>
-<p>区分于计算机视觉，计算机视觉：需要猜测的内容</p>
-<h3 id="二-向量"><a href="#二-向量" class="headerlink" title="二. 向量"></a>二. 向量</h3><p>默认向量为：列向量<br>点乘：可以算出两个向量之间的夹角，向量的投影和分解，判断向量之间的前后关系<br>叉乘：（右手螺旋定则），判断向量的左右和内外</p>
-<h3 id="三-变换"><a href="#三-变换" class="headerlink" title="三. 变换"></a>三. 变换</h3><p>视图变换，模型变换</p>
-<p>线性变换：A’ = MA(M为方阵)此时就为线性变换， 因为e.g. y’ = ax+by+cz</p>
-<p>”通常“变换：旋转（默认旋转方向为逆时针，且绕原点旋转），切片，缩放，反转。</p>
-<p>平移（”特殊“的变换，引入齐次坐标可以变为线性变换）<br>齐次坐标（homogeneous coordinates）：在二维坐标中引入第三维度, 其中0（表示向量）,1（表示点）<br>即(x, y, w)point = (x/w, y/w)point, if w != 0.</p>
-<p>向量具有平移不变性，即平移以后的向量与原向量相等</p>
-<p>仿射变换：线性变换+平移变换（先线性，后平移）</p>
-<p>如何绕一个给定点c旋转呢？<br>答：先平移到原点再旋转，最后再平移回去</p>
-<p>行列式值为+1的正交矩阵，称为特殊正交矩阵，它是一个旋转矩阵。<br>（因此旋转矩阵的逆 == 旋转矩阵的转置）<br>变换矩阵的逆矩阵 就相当于 该变换的逆操作</p>
-<p>任意3维上旋转可以分解为绕xyz轴的旋转（欧拉角）<br>罗德里格思变换公式<br>4元数：用于处理旋转矩阵之间和差的问题</p>
-<h3 id="四-视图变换"><a href="#四-视图变换" class="headerlink" title="四. 视图变换"></a>四. 视图变换</h3><p>类比拍照的步骤：建模，找角度（视图与模型变换），投影</p>
-<p>规定：相机看向模型的方向记为g轴，相机向上铅垂方向记为t轴<br>包括相机所在的空间中有一个默认的标准xyz轴。</p>
-<p>约定：拍照的相机位置应该位于原点，且相机永远朝向-z轴方向看，并且向上角为y轴。<br>为了达到约定，需要对相机（视图变换）与模型（模型变换）进行相同的变换。<br>该变换矩阵可以通过  逆旋转矩阵 来求，即 求如何将标准的xyz轴旋转为相机的g轴，t轴与gXt轴的旋转矩阵，再求逆。</p>
-<p>右手坐标系：x X y == z</p>
-<p>透视投影（近大远小），正交投影</p>
-<p>正交投影(理解)：</p>
-<ol>
-<li>将相机摆放好（视图与模型变换）。</li>
-<li>“去掉”z轴，将模型全部压缩到xoy平面上</li>
-<li>变换平面到[-1,1]^2 </li>
-</ol>
-<p>正交投影（实际操作）：<br>将定义好的视域移动和缩放到canonical(正则，规范，标准)的立方体上，即[-1,1]^3.</p>
-<p>透视投影与正交投影的区别：透视投影的远平面更大近平面更小（视锥），而正交投影为相同大小（视域）</p>
-<p>透视投影(应用最广泛的投影)的操作：</p>
-<ol>
-<li>将远平面压缩为和近平面同样大小</li>
-<li>作正交投影</li>
-</ol>
-<p>挤压远平面的规定：</p>
-<ol>
-<li>与平面垂直的z轴，平面对应的z轴上的值不变</li>
-<li>平面的中心点绝对位置不变</li>
-<li>近平面在挤压的过程不受影响</li>
-</ol>
-<p>将物体“挤压”为正交投影</p>
-<h3 id="六-c-学习"><a href="#六-c-学习" class="headerlink" title="六. c++学习"></a>六. c++学习</h3><p>const与constexpr之间的区别：<br>const 用于表达“只读”的语义，而constexpr 用于表达 “常量”的语义。</p>
-<h3 id="七-EIgen学习"><a href="#七-EIgen学习" class="headerlink" title="七. EIgen学习"></a>七. EIgen学习</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> Matrix&lt;<span class="keyword">float</span>, 3, 1&gt; <span class="title">Vector3f</span><span class="params">(默认为列向量)</span></span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> Matrix&lt;<span class="keyword">float</span>, 4, 4&gt; Matrix4f</span></span><br></pre></td></tr></table></figure>
-
-<p>Arithmetic operators just return an “expression object” describing the computation to be performed. The actual computation happens later,<br>Don’t be afraid of using relatively large arithmetic expressions with Eigen<br>可以分别使用transpose(),conjugate(),adjoint()函数来求矩阵的转置，共轭，伴随（应该是伴随，翻译的是共轭转置）</p>
-<p>identity()函数即创建对应大小的单位矩阵</p>
+          <h3 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h3><p>理智最好的伙伴是激情，那些激动人心的想法，尝试与愿望是维持纪律的原料。</p>
+<p>坚守纪律是一个男人最基本的能力，社会有它的规则，我必须有自己的原则。</p>
+<p>开始一天的工作时，要明白自己今天最想做成什么事情，评估自己的能量还有多少，有哪些是自己先入为主的想法。</p>
+<p>如果没有任何节制，人就是一滩没有秩序的烂肉。</p>
 
       
     </div>
@@ -264,7 +207,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -330,7 +273,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
