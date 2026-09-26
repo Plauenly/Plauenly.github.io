@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/04/18/2026-04-18-%E5%AF%B9%E8%AF%9D/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/09/26/2026-09-26-%E5%A4%87%E5%BF%98%E5%BD%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/04/18/2026-04-18-%E5%AF%B9%E8%AF%9D/" class="post-title-link" itemprop="url">对话</a>
+            <a href="/2026/09/26/2026-09-26-%E5%A4%87%E5%BF%98%E5%BD%95/" class="post-title-link" itemprop="url">备忘录</a>
         </h2>
 
         <div class="post-meta">
@@ -171,7 +171,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2026-04-18 00:00:00 / 修改时间：17:09:33" itemprop="dateCreated datePublished" datetime="2026-04-18T00:00:00+08:00">2026-04-18</time>
+              <time title="创建时间：2026-09-26 09:00:00 / 修改时间：16:39:29" itemprop="dateCreated datePublished" datetime="2026-09-26T09:00:00+08:00">2026-09-26</time>
             </span>
 
           
@@ -185,30 +185,722 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>我现在将自己的社交状态切换到学习状态，<em>尤其是去读文字内容</em> 有点困难。</p>
-<p>状态的切换需要掌握什么技巧？</p>
-<p>答：我可能需要更多的<strong>心理暗示</strong>。</p>
-<p>对于蓝桥杯算法题，我需要学习一些c++语言的标准库的使用技巧。对，需要系统学习点课程。</p>
-<hr>
-<p>$2026.3.16$</p>
-<p>最近我的社交生活很丰富，我也尝试主动去与不太熟悉的人交流，去欣赏别人的特点。</p>
-<p>我现在也慢慢在适应自己的社交节奏，虽然大部分时候都有点社交地忘我了。</p>
-<p>我需要自己在接下来的生活中，不断地调整自己的行驶方向，要向着自己的初心使命前行。</p>
-<p>有时需要自己静下来好好想想自己的事，自己最近是否有用功，最近努力的目标是否正确，自己未来到底想干吗？</p>
-<p>我越来越觉得自己成为了一个独立的人了。</p>
-<p><del>bushi</del></p>
-<hr>
-<p>$2026.4.13$</p>
-<p>蓝桥杯11号考完了，第一次考试回想起来感觉考得挺爽，虽然答题不算理想，整个过程也有遗憾，但是这也弥补了我本科未能打<strong>算法比赛</strong>的遗憾了。</p>
-<p>接下来这学期要将时间和精力放在自己的论文与模型上了，尽快搞出一些阶段性成果，争取在暑假前搞出一篇论文！研二下期可以获得出去实习的机会。</p>
-<p>最近课程比较少，事情不多。但是要抓紧时间，这次蓝桥杯就反应出来了我的老毛病：重要的事情拖到最后才做，不给自己留一点周旋的空间。要提前下定决心要一件大事，千金不能断我志。</p>
-<p>要记住研电赛都没有论文重要，校园是提升自己的黄金时间。提升不了自己就只能投资他人，所以不要畏惧对自我的提升。</p>
-<hr>
-<p>$2026.4.18$</p>
-<p>所有非负方阵都能转化（通过对的图的节点按巧妙重新编号的方式）为Frobenius标准型，详情参考视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1gAiUBGE1J/?spm_id_from=333.1391.0.0&vd_source=faebefabd60b9465d61b1262041d321d">矩阵转化为有向图</a>。</p>
-<p><strong>Frobenius 范数</strong>（Frobenius norm）：把矩阵所有元素的平方加起来，再开根号。</p>
-<p>  Run regularly:<br>  openclaw security audit –deep<br>  openclaw security audit –fix </p>
-<p>万向节死锁发生在欧拉角旋转的顺序中，中间的轴旋转刚好达到90度，导致物体失去了旋转一个自由度。</p>
+          
+## 2026-04-26
+
+我在我的系统中安装了一个version = 11的g++。
+如果想用该编译器的话，在shell中：
+**直接指定编译器路径**
+export CC=/usr/bin/gcc-11
+export CXX=/usr/bin/g++-11
+
+**验证一下当前终端的设置（仅对当前窗口有效）**
+$CXX --version  # 应该会显示 11.x
+
+**根据setup.py中的setup值来编译.so文件并将其安装到site_packages中，这样就可以在任何地方使用import来调用**
+python setup.py build install
+
+**查看显卡名称和对应的计算能力**
+nvidia-smi --query-gpu=name,compute_cap --format=csv
+
+**使用nvcc编译.cu文件的方法**
+nvcc -ccbin(指定g++编译器) /usr/bin/g++-11 -arch(虚拟能力越低越好且小于真实能力，这样可以兼容更多显卡)=compute_110 -code(真实能力，与显卡计算能力相等)=sm_120 test.cu -o testcu
+
+## 2026-05-09
+
+我在我系统中安装了adriod studio在"/opt/androidIDE"中，需要找到并运行该bin文件夹的studio文件才能启动。
+
+在openclaw.json文件中添加这项设置，可以使得在进行高危操作前必须得到用户确认（待验证）
+{
+  "confirmBeforeExecuting": ["git push", "rm", "deploy", "apt install"]
+}
+
+**运行本地linux-command手册**
+sudo docker run --name(指定容器的名字) linux-command --rm(当容器停止立即删除容器) -d(表示启用后台服务) -p(表示启用端口映射) 9665:3000 wcjiang/linux-command:latest
+
+**删除本地已经停止的容器**
+sudo docker container prune
+**显示所有容器包括停止运行的**
+sudo docker ps -a
+**重新启动已经停止的容器**
+sudo docker start linux-command(container name)/9dedec8c6f2c(container ID)
+
+**之前中断的claude会话**
+Resume this session with: claude --resume "android-esp32-tcp-demo"
+初次使用claude的最佳实践是对代码库的提问，在每个项目下创建claude.md可以扩展claude的上下文。
+
+## 2026-05-12
+
+git@github.com:<你的用户名>/Watch.git
+
+git推送遇到的两个坑：
+1. 使用端口号22被deny,具体表现是git push卡死,解决：在~/.ssh/config文件中添加配置使用端口443；
+2. 使用github的用户名与密码登陆出现莫名其妙错误，原因：github现在只支持 使用token的用户登陆或者使用ssh方法来git push, 
+解决：(git remote add origin/git remote set-url origin) git@github.com:...，使用ssh-keygen来生成自己的公钥与私钥后在github账号中添加对应的公钥，
+那么使用ssh来git push这套流程是如何实现认证的呢？使用类似数字签名的机制。
+
+计算机视觉工程师需要图像信号处理为基础，我要把线代(gilbert老师)重新再学一遍。
+
+**查看 PID 为 1234 的进程**
+ps -p PID -o pid,ppid,user,cmd,%cpu,%mem,etime
+ps -eH | grep PID
+ps -p PID -o lstart,cmd
+
+## 2026-05-13
+
+我已经25岁了，国家有五年计划，我应该也有自己的五年计划，我要在未来的五年得到前所未有的进步。
+回顾过去：
+在20岁到25岁期间，我熬过了疫情熬过了失恋也熬过了考研，一路走来不容易。
+在本科的时光我沉浸在幻想，从来没有走进到社会不了解社会现状，也就没有真正的内生驱动力。
+毕业后干了两个月外卖，由于对社会缺少接触很不适应，但是强迫自己干下来，尽管不是那么愉快。
+考研的时候没有报培训班是正确的选择，但其实报一个自习室可能会很好。
+在这两次考研期间，我学习的状态都不是很好，只有考前一个月前好好学（两年了历年的数学卷子都没有做完），由外部压力刺激出的驱动力而已。
+24岁被某高校录取，终于松了口气，终于看见以后的路，终于不用遭受别人的鄙视。
+24岁以后自己才活了起来，开始学会开车，开始出省外挣钱，开始为了自己的未来而学习，并坚定了自己要成为有一技之长的人。
+展望未来：
+在未来的两年努力学习技术，积极参与各种有价值的比赛，锚定未来人工智能方向，力求在未来有自己的立足之地。
+要锻炼身体规律起居，管好嘴迈开腿，有强壮的体魄，不能钱没花了人没了。
+目标：
+1. 今年暑假前搞出实验明年之前投出去一篇。
+2. 明年蓝桥杯我一定要拿到省一以上。
+3. 明年的研电赛做些自己想做的东西。
+4. 明年暑假争取去大厂实习。
+5. 争取在毕业前成为预备党员。
+6. 毕业在广州深圳找到理想工作。
+7. 在三十岁前有50w存款。
+
+## 2026-05-20
+
+群论是人类理解宇宙的基础，有人用群论预测出粒子的物理性质，并且被客观实验中分毫不差的印证了。
+Nathan Carter <<Visual Group Theory>>
+电子科技大学的<<离散数学>>MOOC后面有专门讲群论的入门知识我记得，可以去看看。
+理论学习：线性代数，计算机图形学，概率论，群论(抽象代数)
+
+## 2026-07-18
+
+conda环境安装opencv默认情况是headless版本（没有gui）“conda install -c conda-forge opencv”.
+如果要使用imshow这种可视化函数，推荐用pip渠道安装。“pip install opencv-python”
+imshow()函数如果使用相同的窗口名字，会出现覆盖现象
+使用这个命令可以导出当前conda环境的依赖到yml文件中：conda env export > environment.yml
+conda env create -p /mnt/disk2/envs/PAL -f environment.yml //指定完整的安装路径名字（也作为激活环境时的名字）,并且根据配置文件自动相应的依赖
+conda env create -n pal 	//在默认的安装路径创建环境。
+nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv 更简短一些
+
+## 2026-07-22
+
+我打算做一个扫码点餐系统，这个系统基本功能是：顾客用微信扫码进入点餐界面，在下单付款之后，前台与后厨生成对应小票信息
+
+硬件：打印单子的机器（蓝牙,usb连接，局域网，云平台），后台程序运行的机器（安装一个电脑(得一直跑不能关机)，或是云服务器），商家后台管理的程序（网页(电脑)，或是app(手机)）
+
+技术路线：
+第一阶段：实现扫码进入菜单、点餐、生成订单（可先用“模拟支付”），验证点餐流程。
+第二阶段：接入微信支付，并基于支付回调确认订单状态。
+第三阶段：增加管理后台、WebSocket 实时通知，以及后厨和前台的小票打印。
+第四阶段：完善会员、优惠券、营业统计、库存等扩展功能。
+
+技术选型：
+顾客界面：微信小程序，uniapp
+后台api:FastAPI, springboot
+商家界面：Vue 3 + Element Plus, 或者手机app
+
+使用微信小程序：
+第一步，需要自己用企业信息来注册一个微信小程序，并且每年需要提供认证费用;
+第二步，需要申请一个微信支付商户平台。
+
+我认为使用该系统的优势：
+能够节省1-2人的人力，并且避免高峰期订单写错，遗漏等现象。
+可以统计餐饮数据，并且做出相应调整。
+
+## 2026-07-23
+
+去掉-v参数就可以静默运行
+tar -czvf 压缩包名称.tar.gz /路径/要压缩的文件夹或文件
+tar -xzvf 文件名.tar.gz -C /目标路径/
+
+加上-q参数就可以静默运行
+zip -r 压缩包名称.zip /路径/要压缩的文件夹或文件		(-r : 递归处理)
+unzip 文件名.zip -d /目标路径/
+
+传输文件：
+scp /本地路径/压缩包名称  用户名@接收方IP地址:/远程目标路径/ （注意其中的冒号不能省略）
+npm update -g openclaw@latest
+openclaw gateway restart
+
+    openclaw status — 快速看 Gateway 是否活着
+    openclaw gateway status — 看 systemd 状态和 PID
+    systemctl --user status openclaw-gateway -系统查找
+    openclaw logs --follow — 实时盯日志找报错
+    journalctl --user -u openclaw-gateway -n 50 — 如果 Gateway 起不来，看 systemd 日志
+    cat /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
+
+## 2026-07-24
+
+异常检测的几种思路：
+1.重建式
+2.预测式
+3.One-Class Learning
+4.生成式模型
+都是模型去学正常的背景信息，将原图相减就得到异常点
+
+对于视频红外小目标检测，我的思路是利用异常检测的思路来处理
+
+npm list -g --depth=0	//查看当前node安装哪些项目包
+
+mmdetection框架可以传入字典让 Runner来构建实例，即使用配置文件来构建实例。面向配置编程了
+
+Python语法：
+list.extend(iterable)	将可迭代对象的每个元素逐个加入列表
+*（单星号）  解包或打包（序列/元组）
+**（双星号）  解包或打包（字典）	
+
+## 2026-07-28
+
+fastapi的接口文档/docs,即可查看所有接口情况
+使用命令：curl -X POST http://localhost:8080/post_data   -H "Content-Type: application/json"   -d '{"name":"Alice","age":25}'（遵循http请求协议格式），来可以测试post接口
+使用 @ 符号读取文件
+curl -X POST http://localhost:8080/test/add_user \
+  -H "Content-Type: application/json" \
+  -d @./data.json
+  
+curl -iv http://localhost:8080/api/menu
+  
+curl -X POST http://localhost:8080/api/login/admin -H "Content-Type: application/json"   -d '{"username":"<你的管理员账号>","password":"<已脱敏>","is_admin":1}'
+
+我在我电脑安装了mysql.
+mysqld will log errors to /var/log/mysql/error.log
+
+sudo systemctl status mysql			//查看服务状态
+sudo mysql					//直接用root角色免密码登陆到mysql中
+show tables/databases;				//查看所有的表/所有的databases
+create database XXXX;				//创建一个新的database
+CREATE DATABASE IF NOT EXISTS my_database CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+use XXXX					//改变正在使用的database
+SHOW CREATE TABLE XXX;				//查看 建表语句
+desc XXX;					//查看表信息
+
+经典的例子：
+CREATE TABLE users (
+    -- 1. 主键：每行的唯一标识，自增
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    -- 2. 非空 + 唯一：用户名必填且不能重复
+    username VARCHAR(50) NOT NULL UNIQUE,
+    -- 3. 非空 + 唯一：邮箱必填且不能重复
+    email VARCHAR(100) NOT NULL UNIQUE,
+    -- 4. 默认值：新用户默认为 'active' 状态
+    status VARCHAR(20) DEFAULT 'active',
+    -- 5. 检查：年龄必须合理
+    age INT CHECK (age >= 0 AND age <= 150),
+    -- 6. 默认时间 + 非空：记录创建时间
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+);
+
+-- 外键通常单独定义，或者在另一个表中定义
+CREATE TABLE user_profiles (
+    profile_id INT PRIMARY KEY,
+    user_id INT,
+    bio TEXT,
+    -- 外键：确保 profile 必须关联到一个有效的用户
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+增加，修改，删除表中的字段以及修改表的字段名
+ALTER TABLE dish ADD description TEXT;
+ALTER TABLE dish MODIFY price DECIMAL(10,2);
+ALTER TABLE dish DROP description;
+ALTER TABLE product CHANGE COLUMN id product_id BIGINT PRIMARY KEY;
+
+查看已有用户
+SELECT User, Host FROM mysql.user;
+查看某用户的权限：
+SHOW GRANTS FOR 'blog_user'@'localhost';
+创建用户/修改密码：
+CREATE/ALTER USER 'blog_user'@'localhost' IDENTIFIED BY '新密码';
+回收myblog的数据集的所有表的delete权限：
+REVOKE DELETE ON myblog.* FROM 'blog_user'@'localhost';
+删除用户：
+DROP USER 'blog_user'@'localhost';
+mysql8以上的密码认证都是经过加密，因此项目如果因为加密报错，需要pip install cryptography
+
+
+
+核心参数与最佳实践在使用连接池时，有几个配置和习惯可以直接影响程序的稳定性和性能：关键配置项参数建议说明minsize / maxsize决定了并发能力的上下限。一般的 Web 应用（如 FastAPI 配合 asyncmy）建议 minsize 设为 5，maxsize 设为 20-50，具体取决于你的数据库配置。pool_recycle非常重要。MySQL 默认会踢掉闲置 8 小时（甚至更短）的连接。设置此参数（例如 3600 秒）能让连接池定期回收并重连，避免出现 MySQL server has gone away 报错。autocommit如果你的查询以 SELECT 为主，或者每个 INSERT/UPDATE 都是独立操作，设为 True 更方便。如果要执行强一致性的多步操作，务必设为 False 并手动 await conn.commit()。
+避坑指南坚持使用 async with：
+无论是 pool.acquire() 还是 conn.cursor()，一定要使用 async with 上下文管理器。如果发生异常，它可以确保连接被正确归还到连接池中，否则会导致连接池耗尽（"连接泄露"）。  永远不要使用 f-string 拼接 SQL 变量：在纯 SQL 模式下，防范 SQL 注入是你自己的责任。请始终使用 %s 作为占位符，并将变量作为元组传给 cursor.execute(sql, args)。
+
+## 2026-07-30
+
+JWT（全称 JSON Web Token）是一种紧凑的、自包含的网络身份认证令牌标准。简单说，它利用签名技术(注意主要载荷并没有加密而是base64编码)，用来在各方之间安全地传递可验证的信息（比如用户身份）。
+
+登陆方面：前端在进入小程序时就调用wx.login()函数获得code,后端根据code访问https://api.weixin.qq.com/sns/jscode2session就能获得openid(永久不会过期，同一小程序里不变),
+JWT里面一般保存：
+{
+    user_id,
+    openid,
+    exp
+}然后把它做成jwt的token让以后小程序的一直保存着token。
+
+交易方面：后端受到支付请求后，调用https://api.mch.weixin.qq.com输入商户的相关信息，支付金额以及支付者的openid,成功后会收到prepay_id,根据该prepay_id与自己的商户私钥获得相应信息包，
+在小程序 中的wx.requestPayment函数传入该信息包,便可唤起支付页面，支付成功后会在"https://你的域名/pay/notify"(注意微信支付官方主要支持IPV4)中以post形式通知我的后端服务。
+
+1xx：信息响应
+100 Continue：服务器已收到请求的一部分，客户端可以继续发送其余部分。101 Switching Protocols：服务器正在根据客户端的请求切换协议。
+2xx：成功响应
+200 OK：请求成功，服务器返回了请求的数据。201 Created：请求成功并且服务器创建了新的资源。204 No Content：请求成功，但响应的主体中没有新的数据。
+3xx：重定向消息
+301 Moved Permanently：请求的资源已永久移动到新网址。302 Found：请求的资源临时移动到新网址。304 Not Modified：资源没有被修改，浏览器可以使用缓存的内容。
+4xx：客户端错误
+400 Bad Request：请求有语法错误，服务器看不懂。401 Unauthorized：请求需要用户的身份验证。403 Forbidden：服务器拒绝执行该请求，没有权限。404 Not Found：找不到请求的网页或资源。
+5xx：服务端错误
+500 Internal Server Error：服务器内部出错了，无法完成请求。502 Bad Gateway：网关或代理服务器从上游服务器收到了无效的响应。503 Service Unavailable：服务器目前无法使用（超载或维护）。
+
+## 2026-07-31
+
+asyncio.run()会创建一个event_loop,将main()协程作为第一个循环上的任务并运行它，当main函数执行完毕自动关闭并清理该event_loop
+
+uvicorn服务器会调用类似 asyncio.run() 的机制来启动一个长期运行的事件循环event_loop，
+在fastapi中写的被路由注册的异步函数都是event_loop的协程函数，当其因为IO操作阻塞时，event_loop会让其挂起，并在就绪队列中取出新的协程函数执行。
+FastAPI/uvicorn 的默认模式是 单线程 + 协程并发：在单线程利用cpu和io同时执行的原理，实现函数异步执行；
+注意：fastapi中只能有一个事件循环（即uvicorn自己创建的event_loop）
+
+await request.body() 和 await request.json() 的核心区别在于：前者获取原始字节数据，后者获取解析好的 Python 字典/列表对象。
+几百 MB的大文件 ，请使用 request.stream() 进行流式读取，避免内存溢出
+
+request.app.state里面能保存整个应用都能用上的静态对象
+fastapi中 Path 参数与Query 参数的区别：
+GET /orders/123中 的123属于path参数，GET /orders?page=1&size=20中的page与size属于query参数
+
+## 2026-08-07
+
+查看当前git仓库版本分叉的情况
+git log --oneline --graph --decorate --all
+
+当这条数据的任意字段被修改时，`update_time`会自动更新为修改那一刻的时间。(如果你执行 UPDATE 语句把某个字段改为和原来一样的值（没有实际变化），MySQL 默认不会触发更新，update_time 也不会变。)
+`update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+一致性读REPEATABLE READ(mysql默认)普通select永远只看到数据库一开始的快照，也被称为MVCC(多版本并发控制)，而read commited(oracle默认)普通select可以看到别的事务提交了的数据
+innoDB默认隔离级别为REPEATABLE READ, 锁类型为gap lock
+微信：
+在开发的过程中，请将应答的HTTP头Request-ID值打印到日志中。Request-ID作为请求的唯一标识，在调用接口遇到问题时，可向微信侧提供该值用于快速定位到请求记录，协助排查问题原因
+
+
+INSERT INTO order_sequence
+(merchant_id, seq_date, num)
+VALUES
+(1, '2026-08-07', 1)
+ON DUPLICATE KEY UPDATE
+num=num+1;
+在innoDB中是一整个操作，你的应用程序无法在中间插入
+
+执行 SELECT ... WHERE k = 2 FOR UPDATE 时，表中k最大为1且为唯一索引，InnoDB 会锁住索引的 (1, 正无穷) 这个开区间
+
+base64编码与utf-8编码等有什么区别，为什么前者常见于保密工作中？
+
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import base64
+def decrypt(nonce, ciphertext, associated_data):
+    key = "Your32Apiv3Key"
+    key_bytes = str.encode(key)
+    nonce_bytes = str.encode(nonce)
+    ad_bytes = str.encode(associated_data)
+    data = base64.b64decode(ciphertext)
+    aesgcm = AESGCM(key_bytes)
+    return aesgcm.decrypt(nonce_bytes, data, ad_bytes)
+    
+    
+    {
+    "id": "EV-2018022511223320873",
+    "create_time": "2015-05-20T13:29:35+08:00",
+    "resource_type": "encrypt-resource",
+    "event_type": "TRANSACTION.SUCCESS",
+    "summary": "支付成功",
+    "resource": {
+        "original_type": "transaction",
+        "algorithm": "AEAD_AES_256_GCM",
+        "ciphertext": "",
+        "associated_data": "",
+        "nonce": ""
+    }
+}
+
+全部改完，验证通过。总结一下：
+
+---
+
+## 改动总结
+
+### 后端 `router/order.py`
+
+下单接口 `POST /api/orders` 返回从原来的 `{"order_id": prepay_id}` 改为：
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;order_id&quot;</span>: <span class="number">42</span>,                    <span class="comment">// 真实数据库订单ID（取餐码用）</span></span><br><span class="line">  <span class="attr">&quot;prepay_id&quot;</span>: <span class="string">&quot;wx20141027...&quot;</span>,      <span class="comment">// 微信预支付ID</span></span><br><span class="line">  <span class="attr">&quot;timeStamp&quot;</span>: <span class="string">&quot;1712345678&quot;</span>,         <span class="comment">// 10位秒级时间戳</span></span><br><span class="line">  <span class="attr">&quot;nonceStr&quot;</span>: <span class="string">&quot;a1b2c3d4...&quot;</span>,         <span class="comment">// 32位随机字符串</span></span><br><span class="line">  <span class="attr">&quot;signType&quot;</span>: <span class="string">&quot;RSA&quot;</span>,                 <span class="comment">// 签名类型</span></span><br><span class="line">  <span class="attr">&quot;paySign&quot;</span>: <span class="string">&quot;oR9d8PuhnIc+...&quot;</span>       <span class="comment">// RSA签名（base64）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+关键步骤：
+1. 调用微信 JSAPI 下单拿到 `prepay_id`
+2. 用 `secrets.token_hex(16)` 生成随机 `nonceStr`
+3. 按微信规范构建签名串 `appId\ntimeStamp\nnonceStr\nprepay_id=xxx\n`
+4. 用商户私钥 RSA-SHA256 签名 → `paySign`
+
+### 前端 `pay.vue` 支付流程
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">点击支付 → submitOrder(后端)</span><br><span class="line">              ↓</span><br><span class="line">         拿到 prepay_id + 签名参数</span><br><span class="line">              ↓</span><br><span class="line">         uni.requestPayment（弹出微信收银台）</span><br><span class="line">              ↓</span><br><span class="line">    ┌─────────┴─────────┐</span><br><span class="line">  success              fail</span><br><span class="line">    ↓                    ↓</span><br><span class="line"> 清购物车           cancel → &quot;已取消支付&quot;</span><br><span class="line"> 跳成功页           其他 → &quot;支付失败，请重试&quot;</span><br></pre></td></tr></table></figure>
+
+---
+
+## ⚠️ 注意事项
+
+1. **后端 `.env` 需要正确配置**：`WECHAT_APP_ID`、`WECHAT_MECHANT_ID`、`WECHAT_APP_PRIVATE_KEY_PATH`、`WECHAT_APP_PUBLIC_KEY_PATH`、`WECHAT_MECHANT_SERIAL_NO` 必须填写正确
+2. **`paySign` 签名用的 appId 必须和 JSAPI 下单时用的 appId 一致**，微信会校验
+3. `wx.requestPayment` 的前端回调**不完全可靠**，正式环境建议结合后端的支付回调通知 (`/api/orders/act/weixin`) 和主动查单来确认订单状态
+4. `order_id` 恢复为真实数据库 ID（取餐码 `P0042` 格式），不再是 prepay_id
+
+                			创建支付订单
+                     │
+                    			 ▼
+                 prepay_id
+                     │
+                     			▼
+                 			小程序支付/重新支付
+                     │
+             ┌───────┴────────┐
+             │                │
+             		▼               			 ▼
+       	前端支付结果       			微信支付回调
+             │                │
+             		▼                		▼
+          		后端查单         	后端验签/解密
+             │                │
+             └───────┬────────┘
+                     			▼
+                			统一处理订单
+                     │
+                    			 ▼
+              MySQL 事务更新
+                     │
+                     			▼
+                			订单 → 已支付
+                
+                
+
+## 2026-08-09
+
+编码：
+因为ascii只能表示0-127字节范围的字符，而一个字节是8bit表示范围是0-255
+b64encode()可以让将任意二进制（尤其是从签名函数得到的）转为可打印字符:
+具体地，base64将原来的8bit表示的字符的方式转化为6bit的方式（不够的补0）。这样就能被ascii码表示，而ascii编码是utf-8编码的子集
+
+验证签名的时候，除了可以证明确实是 私钥加密的以外，还能证明被签名的内容没有被修改过。
+python中
+a = b'好的abc'(报错，默认用ascii来编码为字节流)
+a = '好的abc'.encode(""utf-8) 
+会以utf-8的方式存储该字符串对应的字节流。
+
+{
+    "grant_type": "client_credential", 
+    "appid": "<你的 AppID>", 
+    "secret": "<你的 AppSecret>"
+}
+如何做到给后台程序停止信号后，不再让它接受新的业务，并且让它处理完当前的最后一个业务后才彻底停止。
+
+数据库的连接conn: async with pool.acquire() as conn
+要么commit,要么rollback,不能什么也不做，也不能既commit也rollback了。
+finally里面的语句块，无论是try成功了还是except失败了都会执行
+
+## 2026-08-13
+
+  查看事件定义	SHOW CREATE EVENT 事件名称;	查看创建该事件的完整SQL语句
+  删除事件	 DROP EVENT 事件名称;	永久删除该事件
+  临时禁用一个事件：ALTER EVENT 事件名称 DISABLE;
+
+设计一个定时任务(事件event)：
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT clean_closed_orders
+ON SCHEDULE EVERY 1 DAY STARTS '2026-08-13 03:00:00'
+DO
+BEGIN
+  DELETE FROM `orders` 
+  WHERE status = -1 
+  AND create_at < DATE_SUB(NOW(), INTERVAL 30 DAY);(还需要判断是否transaction_id的字段有值)
+  	连接上一句的where条件
+  DELETE FROM `order_product` WHERE `trade_id` = %(trade_id)s;
+END$$
+DELIMITER ;
+
+可能有必要设置mysql的内存占用上限
+正式运行前需要将数据库的mock数据清楚，并将所有自增的键重置为从1开始 
+
+mysql加锁:
+SELECT * FROM order_sequence WHERE merchant_id=1 FOR UPDATE;
+这个语句会对merchant_id=1的行加锁，而不管merchant_id是不是主键或唯一键，所以会可能产生锁全表的情况。
+
+INSERT INTO order_sequence (merchant_id,seq_date,current_seq) VALUES (1,'2026-08-03',1)
+ON DUPLICATE KEY UPDATE current_seq=current_seq+1;
+这个语句会对主键或唯一键冲突的行加锁
+
+mysql中的update与delete语句会自动加排他锁
+
+
+
+对商家app的修改：
+1.所有 接口都是 "api/shangjia";
+2.原则：允许类别category里面没有商品，但不允许商品product没有类别;
+3.在删除类别时提醒商家：分类下的所有只有一个类别的商品都会被删除，请谨慎操作
+4.商品 需要增加一个is_drink的字段（用来区分订单由不同的厨师处理）
+5.需要给一个可以增加商品图片的方法（仅仅上传一张图片，并选择是否为封面，上传图片大小限制在10MB以内）
+6. 根据后端，需要可以对每件商品分给指定的类别以及新增商品的类别 ,如下所表示
+|delete| `/api/shangjia/products/{id}/doCate`| `{"category_id" : XXX}`
+|get| `/api/shangjia/products/{id}/doCate`| `{"category_id" : XXX}`
+7. 提醒商家每天流水 在凌晨3点时候更新
+
+做一个后厨app
+只有一个界面：只展示当天已经支付但是没有完成的订单，点进去进入每个订单的详情页面（用户支付成功会触发刷新，并且），里面有一个出餐按钮（对应/api/orders/finish）点击后即可以修改订单状态并提醒顾客，即提醒对应小程序的订单详情页面（这里需要用websocket去接受消息）
+
+找到测试文件，运行后端的main.py并测试新增的api, 继续在这个测试文件写如测试结果
+
+在docker compose会用，并成功部署到服务器上后再用，尝试获取.env文件
+要求将这两个app都编译出来形成app文件传到github/<你的仓库名>仓库里面
+
+## 2026-08-19
+
+### docker学习：
+
+sudo docker run --name some_name -e MYSQL_ROOT_PASSWORD=my-secret-pw --restart unless-stopped -d -p 80:80 --network network1/host -v ./mysql_data:/var/lib/mysql mysql:tag
+以上命令创建了名字（等同于容器id的功能），给定环境变量MYSQL_ROOT_PASSWORD， -d在后台运行，加入到子网network1/直接用宿主机的网路，将宿主机的80端口映射到容器的80端口，并且制定了"只要不是手动停止容器都会自动重启"的策略, -v表示把宿主机的目录与容器内的目录进行绑定
+
+dockerfile是镜像制作的图纸，镜像是容器的模具
+可以设置每个容器里的cpu，内存，网络带宽等资源上限（cgroups）
+
+在/etc/docker/daemon.json中设置docker的镜像源
+
+{
+    "registry-mirrors": [
+        "https://dockerhub.icu",                                                                                                                              
+        "https://docker.m.daocloud.io",
+        "https://docker.1panel.live",
+        "https://hub.rat.dev",
+        "https://docker.mirrors.ustc.edu.cn"
+    ]   
+}
+阿里云的：
+{
+    "registry-mirrors": [
+        "https://<你的ID>.mirror.aliyuncs.com",
+        "https://docker.m.daocloud.io",
+        "https://mirror.baidubce.com",
+        "https://dockerproxy.com",
+        "https://mirror.iscas.ac.cn",
+        "https://huecker.io",
+        "https://dockerhub.timeweb.cloud",
+        "https://noohub.ru",
+        "https://<你的ID>.mirror.aliyuncs.com"
+    ]
+}
+
+常用命令：
+sudo docker start/stop/create/rm(-f) 容器名字/容器id 	// 启/停/创建(但不运行)/删除(强制) 容器
+sudo docker inspect 容器名字/容器id		// 查看容器内参数
+
+//很有用
+sudo docker logs 容器名字/容器id --follow	// 查看容器日志，滚动查看 
+
+sudo docker exec 容器名字/容器id linux命令	// 在容器内执行linux命令
+sudo docker exec -it 容器名字/容器id /bin/sh	// 进入容器内并获得一个交互式的命令行环境
+
+docker exec -i my-mysql-container (mysql -uroot -p123456 my_database < /path/to/your/file.sql) 
+-i表示使用宿主机的标准输入，"()"里面时要执行的linux命令， 功能是将sql文件导入到容器的mysql数据库中
+
+cat /etc/os-release				// 查看linux的发行版本
+sudo docker build -t namespace/fastapi_test .		// 基于当前目录下的Dockerfile构建一个镜像，名字是fastapi_test,命名空间为namespace(主要适用于要推送到dockerhub时候)
+DOCKER_BUILDKIT=1 sudo docker build  your-image . 			//Dockfile有这个选项--mount=type=cache, 就必须使用该命令来启用缓存加速，要求docker18+,
+sudo docker network create network1
+sudo docker network list
+sudo docker network rm network1
+sudo -i			//成为超级用户
+命名卷挂载的好处是可以跨容器复用
+sudo docker volume create mysql_data		// 准备使用命名卷的挂载方式 ，名字叫mysql_data
+sudo docker volume inspect mysql_data		// 可以查看命名卷实际的位置,可能是"/var/lib/docker/volumes/ts_mysql_data/_data"
+sudo docker volume rm/list
+apt install iproute2				// 安装可以查看ip的工具
+ip addr show
+
+compose不能使用容器名字与id, 而是在docker-compose.yml文件中配置的service名。
+sudo docker compose up/down/stop/start/restart -d			// 运行当前目录下的"docker-compose.yaml"，-d后台运行
+注意： restart 只是“重启原来的容器”；up 是“确保服务按照 compose 配置重新创建/启动”。
+sudo docker compose logs -f server名
+
+在推送到dockerhub前，需要做：
+docker tag my-local-image 你的用户名/仓库名:标签			// 将名为 my-local-image 的本地镜像，标记为你的 Docker Hub 仓库镜像
+
+docker save -o image.tar my-image:tag				// 将名为 my-image:tag 的镜像保存为 image.tar 文件
+
+
+
+
+### nginx学习：
+http协议默认端口是80，所以在不输入端口号就默认访问80端口
+nginx -t 		// 定位nginx的配置文件所在的目录
+nginx的配置文件中的server块连接的文件的根目录在 = 配置文件的所在的目录
+nginx -V 		// 查看nginx的安装目录，从--prefix看
+nginx -s reload 	// 重新加载，让修改过的配置文件生效
+ps -ef | grep XXX	// 查看进程情况
+
+执行docker exec nginx nginx -s reload:
+如果新的nginx.config有语法错误，reload 会失败，但旧的 worker 会继续用老配置运行——服务不会挂，但你改的东西没生效。
+
+反响代理与负债均衡:
+1.在监听80的server里面写入：
+location /api{
+	proxy_pass http://backs;
+}
+2.并在外面配置这个backs:
+upstream backs{
+	ip_hash;	// 确保同一个ip分配到同一个服务器上
+	127.0.0.1:8000  weight=3;	//更多访问这个有权重的服务器
+	172.83.5.6:8000;
+	...
+}
+
+示例如下
+http {
+    upstream fastapi {
+        server fastapi:8080;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://fastapi;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}
+
+
+docker token: <你的 Docker 访问令牌>
+image_id: <已移除>
+
+## 2026-08-23
+
+docker inspect --format='{{.LogPath}}' <容器名或ID>
+查看当前容器的日志输出位置：（默认在/var/lib/docker/containers/容器id 下）
+     
+日志采用的方案：用streamHandler,然后在docker-compose.yml里面配置轮转日志,如下
+services:
+  your-service:
+    image: nginx:latest
+    logging:
+      driver: "json-file"  	# 日志驱动Docker 容器默认将 stdout/stderr 输出捕获，然后通过日志驱动决定：1.日志存储在哪里，2.如何格式化，3.是否发送到外部系统
+      options:              # 驱动选项
+        max-size: "10m"		# 文件最大字节
+        max-file: "3"		# 最多保存的日志总数
+        compress: "true"	# 消耗cpu来对轮转日志压缩与解压缩
+        
+封装httpx.AsyncClient,有重试与异常处理，日志的功能
+为每个ip地址以及访问的接口进行计时
+
+"try...except"语句快中的raise:
+raise 的核心作用是“抛出异常”（Throw Exception），它的使命是中断当前函数的正常执行流程，并将控制权交给"上层调用栈"中的异常处理器（即try...except语句块中）,
+并且逐层向上冒泡（Propagation）：异常会一层层向上传递，直到找到 except 或者到达顶层（__main__）。
+
+docker logs 读取的是容器的“标准输出（stdout）”和“标准错误（stderr）”流。
+
+## 2026-09-04
+
+我现在设置了wx-pi与pi两种启动方式，并且可以将当前启动的目录作为pi-agent的工作目录。启动的结果分别是：
+wx-pi: 创建一个无头且后台常住的装在docker中pi,且需要/wechat autostart才能自动 连接到微信。
+pi: 创建了一个一次性的装在docker中的pi的tui界面，输入/quit便结束这次session.
+可以在项目文件中建立一个AGENTS.md文件用来概括项目全貌，这样可以在每次对话开启时候，pi都会去把这个文件追加到上下文中。
+
+pi的文件夹挂载在：/var/lib/docker/volumes/construct-pi-agent_pi_config/_data
+
+## 2026-09-10
+
+### git学习
+1. git rm --cached <file> 效果：文件不再被 Git 跟踪（会从暂存区移除），但本地磁盘上的文件还在。常用于把已跟踪的文件加入 .gitignore。
+
+cat /etc/os-release 可以获得关于系统的更详细的信息
+
+单进程状态下的顶层代码（缩进为0的代码：包括了函数，类的定义，静态变量的创建，以及import语句）只会执行一次，但是多进程下每个进程都会保留一个静态变量的副本。
+所以多进程之间的通信或许就需要借助redis
+
+MySQL 完全支持多字段嵌套排序（也叫多级排序、复合排序），语法就是在 ORDER BY 后面依次列出多个字段，每个字段可以单独指定 ASC（升序）或 DESC（降序），LIMIT 1表示只取1 row
+
+pydantic中alias机制的坑：
+1. FastAPI 默认 response_model_by_alias=True，也就是说响应默认会用 alias。
+2. 而model_dump() / model_dump_json() 手动序列化时，Pydantic v2 默认 by_alias=False，输出字段名。需要显示指定by_alias=True
+
+## 2026-09-17
+
+### pi agent学习
+使用/model来切换模型
+使用快捷键shift+tab来切换模型的思考强度
+使用/new新开一个session
+在当前对话窗口临时运行一个命令：1. '!docker logs -f fastapi',模型可以看见我们的命令以及命令运行过程 2. '!!docker logs -f fastapi'不让ai看见命令运行
+如果要指明讨论某个文件，使用@来标记要讨论的文件，或者可以粘贴在当前目录下的文件路径
+当发现pi在执行过程中理解错了我们的意思，直接在对话框补充信息回车，默认消息以steering的方式注入（注入的时机是agent在执行完一轮agent loop后再注入steering消息）。
+使用alt+enter将我们的消息以follow-up的方式注入（ai会在任务完成后再查看我们的消息，即排队）
+
+使用pi -p "msg"指令，来让pi静默执行"msg"命令而不开启任何对话框，类似于pi --mode json "你的提示词"。
+使用pi -c 指令，来让pi从最近的一次session继续对话；使用pi -r可以从会话记录中挑选一个会话来继续对话。
+对话框中使用/tree进入单个session的对话树，并可以选择一个历史对话进行回退,使用summarize选项可以让pi在回退后对当前对话有个大概的印象。配合git工具可以实现对话与代码的双回退
+遵循一个session一个任务原则，使用/compact来压缩上下文
+pi install ... (-l), -l即local,将插件安装到项目目录下，仅对当前项目生效。（因为全局安装的话，插件都会在会话开启后占用一定的上下文 空间）
+安装btw插件实现旁路对话的功能，安装mcp可以让pi具备例如调用高德地图的功能，安装plan插件可以让pi先生成计划再执行。
+
+RPC 模式让 Pi Agent 以“无头”方式运行，通过 标准输入/输出（stdin/stdout） 与外部程序通信，而不是在终端里显示交互界面
+
+
+
+代码智能体的核心问题：
+1. 循环（while True）维护（而pi agent是双层循环）
+2. 上下文工程
+3. 工具调用
+
+docker的再学习：
+在docker中创建的用户与宿主机的用户是隔离的，但是如果两者的uid是一致（对齐的），那么docker中创建的文件宿主机就可以正常读写，反之亦然。
+docker-compose build 是 docker build 的再封装，两者最终构建出的镜像内容没有区别，只是compose方法可以在docker-compose.yml文件中的build的配置中处理了命名和参数传递等。
+当 docker-compose.yml 里同时定义了 image 和 build 时，Compose 默认的策略是先尝试从镜像仓库拉取 image 指定的镜像。如果拉取成功，就直接用它；如果拉取失败，才会回退到本地构建build.
+
+env 是 Linux 系统里的一个可执行程序（通常在 /usr/bin/env），它的作用是临时设置环境变量并执行命令。
+ENV 是 Dockerfile 的一个构建指令，用来设置镜像的默认环境变量。
+
+docker inspect <container_name> | grep -i env
+
+## 2026-09-22
+
+### shell的学习
+$被称作展开运算符
+我们将已导出的变量成为环境env变量，未导出的变量称为shell变量，而shell变量只在当前进程中的shell生效，我们可以使用export命令将shell变量提升到env变量。
+shell变量的定义也很简单，即在shell输入"key=value"即可，使用echo $key就可以查看自己定义的shell变量
+导出export只能从父进程往子进程方向，而不能反向。
+linux中环境（env）的定义:
+1. 存储变量名到值的映射
+2. 只属于创建它的那个shell进程的一部分
+3. 存储文本值变量
+4. 并不共享的全局状态
+c语言的main函数接受的参数(int argc, char** argv, char** envp)，可以获取当前的环境变量。
+envp称为环境指针，它以一个以空字符结尾的字符串达到，每个值都表示key=value
+
+系统维护一个每次搜索程序都在这些目录执行搜索的简短列表，叫做PATH,并将它作为一个环境变量暴露出来，这意味着我们可以修改它。
+每当shell需要检索一个程序时会在PATH上依次检索，并在找到第一个匹配项停止并返回。
+PATH是一个以":"作为分隔符的一串字符串
+
+想让容器中的智能体也使用宿主机的mysql服务：
+启动容器时候使用--add-host=host.docker.internal（Docker 提供的特殊域名，解析到宿主机）:host-gateway选项，使用链接mysql://user:pass@host.docker.internal:3306/db去链接mysql服务,
+并让mysql监听docker0这个网桥地址，并且该用户需要授权为远程，即'user'@'%'，使用命令ip addr show docker0 可以查看该网桥地址
+
+## 2026-09-23
+
+tmux (Terminal Multiplexer，终端复用器) 是 Linux 下的一个神器，它的核心作用是 “给终端程序提供一个虚拟的、永不掉线的运行环境”。
+docker-compose.yml 中的 command 选项用于覆盖 Docker 镜像自带的默认启动命令(比如在 Dockerfile 里写 CMD ["pi"]),相当于自定义一个启动方式。
+Docker 的一个铁律：容器的生死，严格绑定于它的 1号进程 (PID 1)。
+Dockerfile中的entrypoint[""]，只能被compose文件中的entrypoint选项覆盖；而command选项只能追加到Dockerfile中entrypoint后
+
 
       
     </div>
@@ -227,7 +919,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -293,7 +985,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -302,7 +994,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

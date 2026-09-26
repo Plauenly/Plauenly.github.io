@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/04/11/2026-04-11-%E7%9F%A5%E8%AF%86%E5%A4%87%E5%BF%98%E5%BD%95/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/04/17/2026-04-18-%E5%AF%B9%E8%AF%9D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/04/11/2026-04-11-%E7%9F%A5%E8%AF%86%E5%A4%87%E5%BF%98%E5%BD%95/" class="post-title-link" itemprop="url">知识备忘录</a>
+            <a href="/2026/04/17/2026-04-18-%E5%AF%B9%E8%AF%9D/" class="post-title-link" itemprop="url">对话</a>
         </h2>
 
         <div class="post-meta">
@@ -169,16 +169,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2026-04-11 00:00:00" itemprop="dateCreated datePublished" datetime="2026-04-11T00:00:00+08:00">2026-04-11</time>
+              <time title="创建时间：2026-04-18 00:00:00 / 修改时间：17:09:33" itemprop="dateCreated datePublished" datetime="2026-04-18T00:00:00+08:00">2026-04-18</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-04-18 17:10:12" itemprop="dateModified" datetime="2026-04-18T17:10:12+08:00">2026-04-18</time>
-              </span>
 
           
 
@@ -191,50 +185,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>理解<strong>单调队列（Monotonic Queue）</strong>的核心逻辑。</p>
-<h3 id="1-代码实现-C-版"><a href="#1-代码实现-C-版" class="headerlink" title="1. 代码实现 (C++ 版)"></a>1. 代码实现 (C++ 版)</h3><p>相比纯 C，C++ 的 <code>std::deque</code>（双端队列）可以让你省去所有手动维护数组指针的烦恼。</p>
-<p>C++</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;deque&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::vector&lt;<span class="keyword">int</span>&gt; <span class="title">maxSlidingWindow</span><span class="params">(std::vector&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">    std::vector&lt;<span class="keyword">int</span>&gt; res;</span><br><span class="line">    std::deque&lt;<span class="keyword">int</span>&gt; dq; <span class="comment">// 存储的是下标</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        <span class="comment">// 1. 检查队首是否已经滑出窗口</span></span><br><span class="line">        <span class="keyword">if</span> (!dq.<span class="built_in">empty</span>() &amp;&amp; dq.<span class="built_in">front</span>() == i - k) &#123;</span><br><span class="line">            dq.<span class="built_in">pop_front</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 保持队列单调递减：如果新来的数比队尾大，队尾就永远没机会当老大，直接踢掉</span></span><br><span class="line">        <span class="keyword">while</span> (!dq.<span class="built_in">empty</span>() &amp;&amp; nums[dq.<span class="built_in">back</span>()] &lt; nums[i]) &#123;</span><br><span class="line">            dq.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        dq.<span class="built_in">push_back</span>(i);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 当窗口形成（i &gt;= k-1）时，队首就是当前窗口最大值</span></span><br><span class="line">        <span class="keyword">if</span> (i &gt;= k - <span class="number">1</span>) &#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(nums[dq.<span class="built_in">front</span>()]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+          <p>我现在将自己的社交状态切换到学习状态，<em>尤其是去读文字内容</em> 有点困难。</p>
+<p>状态的切换需要掌握什么技巧？</p>
+<p>答：我可能需要更多的<strong>心理暗示</strong>。</p>
+<p>对于蓝桥杯算法题，我需要学习一些c++语言的标准库的使用技巧。对，需要系统学习点课程。</p>
 <hr>
-<h3 id="2-记住这段代码的核心逻辑：三个“规矩”"><a href="#2-记住这段代码的核心逻辑：三个“规矩”" class="headerlink" title="2. 记住这段代码的核心逻辑：三个“规矩”"></a>2. 记住这段代码的核心逻辑：三个“规矩”</h3><p>这种算法之所以高效（时间复杂度 $O(n)$），是因为它利用了一个<strong>“优胜劣汰”</strong>的逻辑。你可以把这个双端队列想象成一个<strong>“候选人名单”</strong>：</p>
-<h4 id="第一，存下标，不存数值"><a href="#第一，存下标，不存数值" class="headerlink" title="第一，存下标，不存数值"></a><strong>第一，存下标，不存数值</strong></h4><ul>
-<li><strong>为什么：</strong> 存下标既能通过 <code>nums[i]</code> 找到值，又能通过 <code>i - dq.front() &gt;= k</code> 判断这个数是不是已经“过期”了。</li>
-</ul>
-<h4 id="第二，“比我小又比我老的，全滚”-核心逻辑"><a href="#第二，“比我小又比我老的，全滚”-核心逻辑" class="headerlink" title="第二，“比我小又比我老的，全滚” (核心逻辑)"></a><strong>第二，“比我小又比我老的，全滚” (核心逻辑)</strong></h4><ul>
-<li>当一个新的元素 <code>nums[i]</code> 准备进入队列时，它会观察队尾。</li>
-<li>如果队尾的元素比 <code>nums[i]</code> 小，那么这个队尾元素<strong>永远不可能</strong>成为最大值了。因为 <code>nums[i]</code> 既比它大，又比它年轻（存活时间更长）。</li>
-<li><strong>动作：</strong> <code>while</code> 循环剔除队尾所有比新元素小的下标。</li>
-</ul>
-<h4 id="第三，“过期的，请出去”"><a href="#第三，“过期的，请出去”" class="headerlink" title="第三，“过期的，请出去”"></a><strong>第三，“过期的，请出去”</strong></h4><ul>
-<li>队列的头部永远存着当前最强（最大）的候选人。</li>
-<li>但英雄也会迟暮，如果队首的下标距离当前位置 <code>i</code> 已经超过了 <code>k</code> 的范围，它就该退位了。</li>
-<li><strong>动作：</strong> <code>if</code> 判断队首是否过期。</li>
-</ul>
+<p>$2026.3.16$</p>
+<p>最近我的社交生活很丰富，我也尝试主动去与不太熟悉的人交流，去欣赏别人的特点。</p>
+<p>我现在也慢慢在适应自己的社交节奏，虽然大部分时候都有点社交地忘我了。</p>
+<p>我需要自己在接下来的生活中，不断地调整自己的行驶方向，要向着自己的初心使命前行。</p>
+<p>有时需要自己静下来好好想想自己的事，自己最近是否有用功，最近努力的目标是否正确，自己未来到底想干吗？</p>
+<p>我越来越觉得自己成为了一个独立的人了。</p>
+<p><del>bushi</del></p>
 <hr>
-<h3 id="3-记忆口诀（防忘指南）"><a href="#3-记忆口诀（防忘指南）" class="headerlink" title="3. 记忆口诀（防忘指南）"></a>3. 记忆口诀（防忘指南）</h3><p>如果你下次写不出来，回想这三步：</p>
-<ol>
-<li><strong>清理过期：</strong> 队首下标太老了，踢掉。</li>
-<li><strong>清理弱者：</strong> 只要新来的比队尾强，队尾就连续弹出（保证队列从大到小）。</li>
-<li><strong>加入新血：</strong> 把新下标压入队尾。</li>
-<li><strong>记录结果：</strong> 此时的队首就是我们要的英雄。</li>
-</ol>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度：</strong> $O(n)$。虽然有嵌套循环，但每个元素最多进队一次、出队一次。</li>
-<li><strong>空间复杂度：</strong> $O(k)$。队列中最多同时存放 $k$ 个下标。</li>
-</ul>
-<p>这种“单调队列”的思想在处理“找区间最值”类问题时非常通用，掌握了这套逻辑，你就不再需要死记硬背数组下标的加减法了。</p>
+<p>$2026.4.13$</p>
+<p>蓝桥杯11号考完了，第一次考试回想起来感觉考得挺爽，虽然答题不算理想，整个过程也有遗憾，但是这也弥补了我本科未能打<strong>算法比赛</strong>的遗憾了。</p>
+<p>接下来这学期要将时间和精力放在自己的论文与模型上了，尽快搞出一些阶段性成果，争取在暑假前搞出一篇论文！研二下期可以获得出去实习的机会。</p>
+<p>最近课程比较少，事情不多。但是要抓紧时间，这次蓝桥杯就反应出来了我的老毛病：重要的事情拖到最后才做，不给自己留一点周旋的空间。要提前下定决心要一件大事，千金不能断我志。</p>
+<p>要记住研电赛都没有论文重要，校园是提升自己的黄金时间。提升不了自己就只能投资他人，所以不要畏惧对自我的提升。</p>
 <hr>
-<h2 id="2026-4-9注意"><a href="#2026-4-9注意" class="headerlink" title="2026.4.9注意"></a>2026.4.9注意</h2><ul>
-<li>字符串在拼接的过程中，实际上是一个append的过程，即”a”+”b”，读作”ab”。但是b是append到a上的，所以字串的下标0其实是’a’而不是’b’!</li>
-<li>priority_queue中自定义比较函数时， （const 类型&amp; l, const 类型&amp; r）return true  表示 <strong>l</strong> 应该放在 <strong>r</strong> 的后面；</li>
-<li>sort中自定义比较函数时， （const 类型&amp; l, const 类型&amp; r）return true表示 <strong>l</strong> 应该放在 <strong>r</strong> 的前面</li>
-<li>初始化priority_queue时候，要么先创建函数体对象my_cmp cmp();，要么使用{}而不是()来初始化</li>
-<li>list不支持下标来访问元素，因此使用 upper_bound(), binary_search()函数的时间复杂是线性的<strong>O(n)<strong>，而不是</strong>O(logn)</strong>.</li>
-<li><strong>%</strong> 运算符优先级比 <strong>+</strong> 高，因此 <strong>ocr % i+1</strong>等价于 <strong>(ocr%i)+1</strong> </li>
-</ul>
-<hr>
-<h2 id="2026-4-11注意"><a href="#2026-4-11注意" class="headerlink" title="2026.4.11注意"></a>2026.4.11注意</h2><p>windows中在cmd使用<br>certutil -hashfile 文件名 SHA256 来获得校验值</p>
+<p>$2026.4.18$</p>
+<p>所有非负方阵都能转化（通过对的图的节点按巧妙重新编号的方式）为Frobenius标准型，详情参考视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1gAiUBGE1J/?spm_id_from=333.1391.0.0&vd_source=faebefabd60b9465d61b1262041d321d">矩阵转化为有向图</a>。</p>
+<p><strong>Frobenius 范数</strong>（Frobenius norm）：把矩阵所有元素的平方加起来，再开根号。</p>
+<p>  Run regularly:<br>  openclaw security audit –deep<br>  openclaw security audit –fix </p>
+<p>万向节死锁发生在欧拉角旋转的顺序中，中间的轴旋转刚好达到90度，导致物体失去了旋转一个自由度。</p>
 
       
     </div>
@@ -253,7 +227,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -319,7 +293,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -328,7 +302,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
