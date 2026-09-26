@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2025/12/26/2025-12-26%E6%84%9F%E6%83%B3/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/09/10/2026-09-10-git-rm-%E4%B8%8E%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/12/26/2025-12-26%E6%84%9F%E6%83%B3/" class="post-title-link" itemprop="url">2025_12_26感想</a>
+            <a href="/2026/09/10/2026-09-10-git-rm-%E4%B8%8E%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81/" class="post-title-link" itemprop="url">git rm 与多进程状态</a>
         </h2>
 
         <div class="post-meta">
@@ -169,10 +169,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-12-26 14:38:33 / 修改时间：14:41:52" itemprop="dateCreated datePublished" datetime="2025-12-26T14:38:33+08:00">2025-12-26</time>
+              <time title="创建时间：2026-09-10 09:00:00" itemprop="dateCreated datePublished" datetime="2026-09-10T09:00:00+08:00">2026-09-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+              </span>
 
           
 
@@ -185,8 +191,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="提前安排"><a href="#提前安排" class="headerlink" title="提前安排"></a>提前安排</h3><p>走在时间的前面需要有预见性意识，是个非常优秀的习惯。<br>它可以让我总是可以随机应变，能给自己留更多的时间。</p>
-<h3 id="魔鬼"><a href="#魔鬼" class="headerlink" title="魔鬼"></a>魔鬼</h3><p>所谓魔鬼就是将任何本认为不合理的事，正在合理化的行为。<br>以前的我在它面前，就像小狗一样任其摆布。</p>
+          
+### git学习
+1. git rm --cached <file> 效果：文件不再被 Git 跟踪（会从暂存区移除），但本地磁盘上的文件还在。常用于把已跟踪的文件加入 .gitignore。
+
+cat /etc/os-release 可以获得关于系统的更详细的信息
+
+单进程状态下的顶层代码（缩进为0的代码：包括了函数，类的定义，静态变量的创建，以及import语句）只会执行一次，但是多进程下每个进程都会保留一个静态变量的副本。
+所以多进程之间的通信或许就需要借助redis
+
+MySQL 完全支持多字段嵌套排序（也叫多级排序、复合排序），语法就是在 ORDER BY 后面依次列出多个字段，每个字段可以单独指定 ASC（升序）或 DESC（降序），LIMIT 1表示只取1 row
+
+pydantic中alias机制的坑：
+1. FastAPI 默认 response_model_by_alias=True，也就是说响应默认会用 alias。
+2. 而model_dump() / model_dump_json() 手动序列化时，Pydantic v2 默认 by_alias=False，输出字段名。需要显示指定by_alias=True
+
 
       
     </div>
@@ -205,7 +224,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -271,7 +290,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -280,7 +299,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">56</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

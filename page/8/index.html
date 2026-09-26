@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2025/12/08/%E6%88%91%E7%9A%84%E6%84%9F%E6%85%A8/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/13/2026-08-13-MySQL-%E5%AE%9A%E6%97%B6%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%95%86%E5%AE%B6%E7%AB%AF%E6%94%B9%E9%80%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/12/08/%E6%88%91%E7%9A%84%E6%84%9F%E6%85%A8/" class="post-title-link" itemprop="url">我的感慨</a>
+            <a href="/2026/08/13/2026-08-13-MySQL-%E5%AE%9A%E6%97%B6%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%95%86%E5%AE%B6%E7%AB%AF%E6%94%B9%E9%80%A0/" class="post-title-link" itemprop="url">MySQL 定时事件与商家端改造</a>
         </h2>
 
         <div class="post-meta">
@@ -169,10 +169,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-12-08 20:32:48 / 修改时间：20:41:42" itemprop="dateCreated datePublished" datetime="2025-12-08T20:32:48+08:00">2025-12-08</time>
+              <time title="创建时间：2026-08-13 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-13T09:00:00+08:00">2026-08-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+              </span>
 
           
 
@@ -185,8 +191,60 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="24的感叹"><a href="#24的感叹" class="headerlink" title="24的感叹"></a>24的感叹</h3><p>今天写到树形DP突然发现自己对代码的反应怎么变慢了。<br>我已经走过24个四季，之前填表格选自己生日的时候都发现要翻好久才能到2001年，<br>比起刚20岁的时候，我对代码的敏感程度确实降低了些，<br>但是如今的我比起20岁，至少有了更加科学的学习方法和更沉稳的心态，至少不会被“别人的代码里面有黑魔法”给唬住。</p>
-<p>cacc那次的题，我表现的太差。我不想在蓝桥杯上或者工作笔试的时候仍然还是这么差。<br>时间会证明努力的。</p>
+          
+  查看事件定义	SHOW CREATE EVENT 事件名称;	查看创建该事件的完整SQL语句
+  删除事件	 DROP EVENT 事件名称;	永久删除该事件
+  临时禁用一个事件：ALTER EVENT 事件名称 DISABLE;
+
+设计一个定时任务(事件event)：
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT clean_closed_orders
+ON SCHEDULE EVERY 1 DAY STARTS '2026-08-13 03:00:00'
+DO
+BEGIN
+  DELETE FROM `orders` 
+  WHERE status = -1 
+  AND create_at < DATE_SUB(NOW(), INTERVAL 30 DAY);(还需要判断是否transaction_id的字段有值)
+  	连接上一句的where条件
+  DELETE FROM `order_product` WHERE `trade_id` = %(trade_id)s;
+END$$
+DELIMITER ;
+
+可能有必要设置mysql的内存占用上限
+正式运行前需要将数据库的mock数据清楚，并将所有自增的键重置为从1开始 
+
+mysql加锁:
+SELECT * FROM order_sequence WHERE merchant_id=1 FOR UPDATE;
+这个语句会对merchant_id=1的行加锁，而不管merchant_id是不是主键或唯一键，所以会可能产生锁全表的情况。
+
+INSERT INTO order_sequence (merchant_id,seq_date,current_seq) VALUES (1,'2026-08-03',1)
+ON DUPLICATE KEY UPDATE current_seq=current_seq+1;
+这个语句会对主键或唯一键冲突的行加锁
+
+mysql中的update与delete语句会自动加排他锁
+
+
+
+对商家app的修改：
+1.所有 接口都是 "api/shangjia";
+2.原则：允许类别category里面没有商品，但不允许商品product没有类别;
+3.在删除类别时提醒商家：分类下的所有只有一个类别的商品都会被删除，请谨慎操作
+4.商品 需要增加一个is_drink的字段（用来区分订单由不同的厨师处理）
+5.需要给一个可以增加商品图片的方法（仅仅上传一张图片，并选择是否为封面，上传图片大小限制在10MB以内）
+6. 根据后端，需要可以对每件商品分给指定的类别以及新增商品的类别 ,如下所表示
+|delete| `/api/shangjia/products/{id}/doCate`| `{"category_id" : XXX}`
+|get| `/api/shangjia/products/{id}/doCate`| `{"category_id" : XXX}`
+7. 提醒商家每天流水 在凌晨3点时候更新
+
+做一个后厨app
+只有一个界面：只展示当天已经支付但是没有完成的订单，点进去进入每个订单的详情页面（用户支付成功会触发刷新，并且），里面有一个出餐按钮（对应/api/orders/finish）点击后即可以修改订单状态并提醒顾客，即提醒对应小程序的订单详情页面（这里需要用websocket去接受消息）
+
+找到测试文件，运行后端的main.py并测试新增的api, 继续在这个测试文件写如测试结果
+
+在docker compose会用，并成功部署到服务器上后再用，尝试获取.env文件
+要求将这两个app都编译出来形成app文件传到github/<你的仓库名>仓库里面
+
 
       
     </div>
@@ -205,7 +263,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -271,7 +329,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -280,7 +338,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">56</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

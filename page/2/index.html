@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/04/17/2026-04-18-%E5%AF%B9%E8%AF%9D/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/09/22/2026-09-22-shell-%E5%8F%98%E9%87%8F%E4%B8%8E%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/04/17/2026-04-18-%E5%AF%B9%E8%AF%9D/" class="post-title-link" itemprop="url">对话</a>
+            <a href="/2026/09/22/2026-09-22-shell-%E5%8F%98%E9%87%8F%E4%B8%8E%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" class="post-title-link" itemprop="url">shell 变量与环境变量</a>
         </h2>
 
         <div class="post-meta">
@@ -169,10 +169,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2026-04-18 00:00:00 / 修改时间：17:09:33" itemprop="dateCreated datePublished" datetime="2026-04-18T00:00:00+08:00">2026-04-18</time>
+              <time title="创建时间：2026-09-22 09:00:00" itemprop="dateCreated datePublished" datetime="2026-09-22T09:00:00+08:00">2026-09-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+              </span>
 
           
 
@@ -185,30 +191,28 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>我现在将自己的社交状态切换到学习状态，<em>尤其是去读文字内容</em> 有点困难。</p>
-<p>状态的切换需要掌握什么技巧？</p>
-<p>答：我可能需要更多的<strong>心理暗示</strong>。</p>
-<p>对于蓝桥杯算法题，我需要学习一些c++语言的标准库的使用技巧。对，需要系统学习点课程。</p>
-<hr>
-<p>$2026.3.16$</p>
-<p>最近我的社交生活很丰富，我也尝试主动去与不太熟悉的人交流，去欣赏别人的特点。</p>
-<p>我现在也慢慢在适应自己的社交节奏，虽然大部分时候都有点社交地忘我了。</p>
-<p>我需要自己在接下来的生活中，不断地调整自己的行驶方向，要向着自己的初心使命前行。</p>
-<p>有时需要自己静下来好好想想自己的事，自己最近是否有用功，最近努力的目标是否正确，自己未来到底想干吗？</p>
-<p>我越来越觉得自己成为了一个独立的人了。</p>
-<p><del>bushi</del></p>
-<hr>
-<p>$2026.4.13$</p>
-<p>蓝桥杯11号考完了，第一次考试回想起来感觉考得挺爽，虽然答题不算理想，整个过程也有遗憾，但是这也弥补了我本科未能打<strong>算法比赛</strong>的遗憾了。</p>
-<p>接下来这学期要将时间和精力放在自己的论文与模型上了，尽快搞出一些阶段性成果，争取在暑假前搞出一篇论文！研二下期可以获得出去实习的机会。</p>
-<p>最近课程比较少，事情不多。但是要抓紧时间，这次蓝桥杯就反应出来了我的老毛病：重要的事情拖到最后才做，不给自己留一点周旋的空间。要提前下定决心要一件大事，千金不能断我志。</p>
-<p>要记住研电赛都没有论文重要，校园是提升自己的黄金时间。提升不了自己就只能投资他人，所以不要畏惧对自我的提升。</p>
-<hr>
-<p>$2026.4.18$</p>
-<p>所有非负方阵都能转化（通过对的图的节点按巧妙重新编号的方式）为Frobenius标准型，详情参考视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1gAiUBGE1J/?spm_id_from=333.1391.0.0&vd_source=faebefabd60b9465d61b1262041d321d">矩阵转化为有向图</a>。</p>
-<p><strong>Frobenius 范数</strong>（Frobenius norm）：把矩阵所有元素的平方加起来，再开根号。</p>
-<p>  Run regularly:<br>  openclaw security audit –deep<br>  openclaw security audit –fix </p>
-<p>万向节死锁发生在欧拉角旋转的顺序中，中间的轴旋转刚好达到90度，导致物体失去了旋转一个自由度。</p>
+          
+### shell的学习
+$被称作展开运算符
+我们将已导出的变量成为环境env变量，未导出的变量称为shell变量，而shell变量只在当前进程中的shell生效，我们可以使用export命令将shell变量提升到env变量。
+shell变量的定义也很简单，即在shell输入"key=value"即可，使用echo $key就可以查看自己定义的shell变量
+导出export只能从父进程往子进程方向，而不能反向。
+linux中环境（env）的定义:
+1. 存储变量名到值的映射
+2. 只属于创建它的那个shell进程的一部分
+3. 存储文本值变量
+4. 并不共享的全局状态
+c语言的main函数接受的参数(int argc, char** argv, char** envp)，可以获取当前的环境变量。
+envp称为环境指针，它以一个以空字符结尾的字符串达到，每个值都表示key=value
+
+系统维护一个每次搜索程序都在这些目录执行搜索的简短列表，叫做PATH,并将它作为一个环境变量暴露出来，这意味着我们可以修改它。
+每当shell需要检索一个程序时会在PATH上依次检索，并在找到第一个匹配项停止并返回。
+PATH是一个以":"作为分隔符的一串字符串
+
+想让容器中的智能体也使用宿主机的mysql服务：
+启动容器时候使用--add-host=host.docker.internal（Docker 提供的特殊域名，解析到宿主机）:host-gateway选项，使用链接mysql://user:pass@host.docker.internal:3306/db去链接mysql服务,
+并让mysql监听docker0这个网桥地址，并且该用户需要授权为远程，即'user'@'%'，使用命令ip addr show docker0 可以查看该网桥地址
+
 
       
     </div>
@@ -227,7 +231,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -293,7 +297,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -302,7 +306,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">56</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

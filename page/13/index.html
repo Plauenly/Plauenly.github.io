@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2022/01/14/%E7%94%9F%E6%B4%BB%E6%9C%89%E6%84%9F%E5%9B%9B/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/07/28/2026-07-28-FastAPI-%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E4%B8%8E-MySQL-%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/01/14/%E7%94%9F%E6%B4%BB%E6%9C%89%E6%84%9F%E5%9B%9B/" class="post-title-link" itemprop="url">生活有感四</a>
+            <a href="/2026/07/28/2026-07-28-FastAPI-%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E4%B8%8E-MySQL-%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">FastAPI 接口测试与 MySQL 基础</a>
         </h2>
 
         <div class="post-meta">
@@ -169,10 +169,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-01-14 16:18:57 / 修改时间：16:44:08" itemprop="dateCreated datePublished" datetime="2022-01-14T16:18:57+08:00">2022-01-14</time>
+              <time title="创建时间：2026-07-28 09:00:00" itemprop="dateCreated datePublished" datetime="2026-07-28T09:00:00+08:00">2026-07-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+              </span>
 
           
 
@@ -185,11 +191,79 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>其实我一直认为这个世界不是一个非黑即白的世界，没有人能限制住一个人的思想，那是作为人最根本的权力，除非自己去限制自己的能力，这也时常发生。</p>
-<p>我发现自己并不是对诱惑很有抵抗力。诱惑大部分都是高刺激事物，当我习惯接受一些高刺激的东西，我会对自己缺乏关注。但是在我今后的日子里，我自己的生活完全靠自己，也必须是自己，我需要的是低刺激的事物，反而不会让我错过享受生活的机会。高刺激的事物很爽，但终究是昙花一现，不能成为我生活的主旋律。</p>
-<p>低刺激的事物其实来的很慢，需要点时间，但却很自然。比如我现在的目标：我想扣篮，我每天坚持一定的训练量，坚持吃早饭，在能扣篮的那刹那我想是美丽的。我们如果不控制好自己对娱乐的痴迷，再好的成长条件和机会都会被浪费掉。</p>
-<p>其实不需要过多地讨论自然和人工的，哪个更好。只要适合我们生存的主旋律，该摒弃的摒弃，该采纳的采纳。</p>
-<p>控制住自己的欲望，和控制自己的饮食方式一样，都是不容忽视的事情。在这个精神需求成为人们必须品的时代，我们需要控制自己的摄入量，以及质量。</p>
+          
+fastapi的接口文档/docs,即可查看所有接口情况
+使用命令：curl -X POST http://localhost:8080/post_data   -H "Content-Type: application/json"   -d '{"name":"Alice","age":25}'（遵循http请求协议格式），来可以测试post接口
+使用 @ 符号读取文件
+curl -X POST http://localhost:8080/test/add_user \
+  -H "Content-Type: application/json" \
+  -d @./data.json
+  
+curl -iv http://localhost:8080/api/menu
+  
+curl -X POST http://localhost:8080/api/login/admin -H "Content-Type: application/json"   -d '{"username":"<你的管理员账号>","password":"<已脱敏>","is_admin":1}'
+
+我在我电脑安装了mysql.
+mysqld will log errors to /var/log/mysql/error.log
+
+sudo systemctl status mysql			//查看服务状态
+sudo mysql					//直接用root角色免密码登陆到mysql中
+show tables/databases;				//查看所有的表/所有的databases
+create database XXXX;				//创建一个新的database
+CREATE DATABASE IF NOT EXISTS my_database CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+use XXXX					//改变正在使用的database
+SHOW CREATE TABLE XXX;				//查看 建表语句
+desc XXX;					//查看表信息
+
+经典的例子：
+CREATE TABLE users (
+    -- 1. 主键：每行的唯一标识，自增
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    -- 2. 非空 + 唯一：用户名必填且不能重复
+    username VARCHAR(50) NOT NULL UNIQUE,
+    -- 3. 非空 + 唯一：邮箱必填且不能重复
+    email VARCHAR(100) NOT NULL UNIQUE,
+    -- 4. 默认值：新用户默认为 'active' 状态
+    status VARCHAR(20) DEFAULT 'active',
+    -- 5. 检查：年龄必须合理
+    age INT CHECK (age >= 0 AND age <= 150),
+    -- 6. 默认时间 + 非空：记录创建时间
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+);
+
+-- 外键通常单独定义，或者在另一个表中定义
+CREATE TABLE user_profiles (
+    profile_id INT PRIMARY KEY,
+    user_id INT,
+    bio TEXT,
+    -- 外键：确保 profile 必须关联到一个有效的用户
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+增加，修改，删除表中的字段以及修改表的字段名
+ALTER TABLE dish ADD description TEXT;
+ALTER TABLE dish MODIFY price DECIMAL(10,2);
+ALTER TABLE dish DROP description;
+ALTER TABLE product CHANGE COLUMN id product_id BIGINT PRIMARY KEY;
+
+查看已有用户
+SELECT User, Host FROM mysql.user;
+查看某用户的权限：
+SHOW GRANTS FOR 'blog_user'@'localhost';
+创建用户/修改密码：
+CREATE/ALTER USER 'blog_user'@'localhost' IDENTIFIED BY '新密码';
+回收myblog的数据集的所有表的delete权限：
+REVOKE DELETE ON myblog.* FROM 'blog_user'@'localhost';
+删除用户：
+DROP USER 'blog_user'@'localhost';
+mysql8以上的密码认证都是经过加密，因此项目如果因为加密报错，需要pip install cryptography
+
+
+
+核心参数与最佳实践在使用连接池时，有几个配置和习惯可以直接影响程序的稳定性和性能：关键配置项参数建议说明minsize / maxsize决定了并发能力的上下限。一般的 Web 应用（如 FastAPI 配合 asyncmy）建议 minsize 设为 5，maxsize 设为 20-50，具体取决于你的数据库配置。pool_recycle非常重要。MySQL 默认会踢掉闲置 8 小时（甚至更短）的连接。设置此参数（例如 3600 秒）能让连接池定期回收并重连，避免出现 MySQL server has gone away 报错。autocommit如果你的查询以 SELECT 为主，或者每个 INSERT/UPDATE 都是独立操作，设为 True 更方便。如果要执行强一致性的多步操作，务必设为 False 并手动 await conn.commit()。
+避坑指南坚持使用 async with：
+无论是 pool.acquire() 还是 conn.cursor()，一定要使用 async with 上下文管理器。如果发生异常，它可以确保连接被正确归还到连接池中，否则会导致连接池耗尽（"连接泄露"）。  永远不要使用 f-string 拼接 SQL 变量：在纯 SQL 模式下，防范 SQL 注入是你自己的责任。请始终使用 %s 作为占位符，并将变量作为元组传给 cursor.execute(sql, args)。
+
 
       
     </div>
@@ -208,7 +282,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -274,7 +348,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -283,7 +357,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">56</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

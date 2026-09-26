@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2023/01/27/2023_1_27_%E7%94%9F%E6%B4%BB%E6%9C%89%E6%84%9F/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/07/30/2026-07-30-JWT-%E4%B8%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/27/2023_1_27_%E7%94%9F%E6%B4%BB%E6%9C%89%E6%84%9F/" class="post-title-link" itemprop="url">2023_1_27_生活有感</a>
+            <a href="/2026/07/30/2026-07-30-JWT-%E4%B8%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">JWT 与微信支付整体流程</a>
         </h2>
 
         <div class="post-meta">
@@ -170,14 +170,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-01-27 10:03:10" itemprop="dateCreated datePublished" datetime="2023-01-27T10:03:10+08:00">2023-01-27</time>
+              <time title="创建时间：2026-07-30 09:00:00" itemprop="dateCreated datePublished" datetime="2026-07-30T09:00:00+08:00">2026-07-30</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-06-10 14:21:40" itemprop="dateModified" datetime="2025-06-10T14:21:40+08:00">2025-06-10</time>
+                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
               </span>
 
           
@@ -191,7 +191,31 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>拾起丢下的决心，勇气和毅力，再一起踏上不让自己后悔的人生路，踏上自我救赎的旅途。</p>
+          
+JWT（全称 JSON Web Token）是一种紧凑的、自包含的网络身份认证令牌标准。简单说，它利用签名技术(注意主要载荷并没有加密而是base64编码)，用来在各方之间安全地传递可验证的信息（比如用户身份）。
+
+登陆方面：前端在进入小程序时就调用wx.login()函数获得code,后端根据code访问https://api.weixin.qq.com/sns/jscode2session就能获得openid(永久不会过期，同一小程序里不变),
+JWT里面一般保存：
+{
+    user_id,
+    openid,
+    exp
+}然后把它做成jwt的token让以后小程序的一直保存着token。
+
+交易方面：后端受到支付请求后，调用https://api.mch.weixin.qq.com输入商户的相关信息，支付金额以及支付者的openid,成功后会收到prepay_id,根据该prepay_id与自己的商户私钥获得相应信息包，
+在小程序 中的wx.requestPayment函数传入该信息包,便可唤起支付页面，支付成功后会在"https://你的域名/pay/notify"(注意微信支付官方主要支持IPV4)中以post形式通知我的后端服务。
+
+1xx：信息响应
+100 Continue：服务器已收到请求的一部分，客户端可以继续发送其余部分。101 Switching Protocols：服务器正在根据客户端的请求切换协议。
+2xx：成功响应
+200 OK：请求成功，服务器返回了请求的数据。201 Created：请求成功并且服务器创建了新的资源。204 No Content：请求成功，但响应的主体中没有新的数据。
+3xx：重定向消息
+301 Moved Permanently：请求的资源已永久移动到新网址。302 Found：请求的资源临时移动到新网址。304 Not Modified：资源没有被修改，浏览器可以使用缓存的内容。
+4xx：客户端错误
+400 Bad Request：请求有语法错误，服务器看不懂。401 Unauthorized：请求需要用户的身份验证。403 Forbidden：服务器拒绝执行该请求，没有权限。404 Not Found：找不到请求的网页或资源。
+5xx：服务端错误
+500 Internal Server Error：服务器内部出错了，无法完成请求。502 Bad Gateway：网关或代理服务器从上游服务器收到了无效的响应。503 Service Unavailable：服务器目前无法使用（超载或维护）。
+
 
       
     </div>
@@ -210,7 +234,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -276,7 +300,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -285,7 +309,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">56</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
