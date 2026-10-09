@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
@@ -177,7 +177,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+                <time title="修改时间：2026-10-09 14:18:21" itemprop="dateModified" datetime="2026-10-09T14:18:21+08:00">2026-10-09</time>
               </span>
 
           
@@ -191,79 +191,59 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
-fastapi的接口文档/docs,即可查看所有接口情况
-使用命令：curl -X POST http://localhost:8080/post_data   -H "Content-Type: application/json"   -d '{"name":"Alice","age":25}'（遵循http请求协议格式），来可以测试post接口
-使用 @ 符号读取文件
-curl -X POST http://localhost:8080/test/add_user \
-  -H "Content-Type: application/json" \
-  -d @./data.json
-  
-curl -iv http://localhost:8080/api/menu
-  
-curl -X POST http://localhost:8080/api/login/admin -H "Content-Type: application/json"   -d '{"username":"<你的管理员账号>","password":"<已脱敏>","is_admin":1}'
+          <h2 id="FastAPI-接口测试"><a href="#FastAPI-接口测试" class="headerlink" title="FastAPI 接口测试"></a>FastAPI 接口测试</h2><p>接口文档在 <code>/docs</code>，可以查看所有接口情况。</p>
+<p>用 curl 测试 POST 接口（遵循 HTTP 请求协议格式）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST http://localhost:8080/post_data \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&#123;&quot;name&quot;:&quot;Alice&quot;,&quot;age&quot;:25&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
 
-我在我电脑安装了mysql.
-mysqld will log errors to /var/log/mysql/error.log
+<p>用 <code>@</code> 符号读取文件作为请求体：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST http://localhost:8080/<span class="built_in">test</span>/add_user \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  -d @./data.json</span><br></pre></td></tr></table></figure>
 
-sudo systemctl status mysql			//查看服务状态
-sudo mysql					//直接用root角色免密码登陆到mysql中
-show tables/databases;				//查看所有的表/所有的databases
-create database XXXX;				//创建一个新的database
-CREATE DATABASE IF NOT EXISTS my_database CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-use XXXX					//改变正在使用的database
-SHOW CREATE TABLE XXX;				//查看 建表语句
-desc XXX;					//查看表信息
+<p>查看响应头等详细信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -iv http://localhost:8080/api/menu</span><br></pre></td></tr></table></figure>
 
-经典的例子：
-CREATE TABLE users (
-    -- 1. 主键：每行的唯一标识，自增
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    -- 2. 非空 + 唯一：用户名必填且不能重复
-    username VARCHAR(50) NOT NULL UNIQUE,
-    -- 3. 非空 + 唯一：邮箱必填且不能重复
-    email VARCHAR(100) NOT NULL UNIQUE,
-    -- 4. 默认值：新用户默认为 'active' 状态
-    status VARCHAR(20) DEFAULT 'active',
-    -- 5. 检查：年龄必须合理
-    age INT CHECK (age >= 0 AND age <= 150),
-    -- 6. 默认时间 + 非空：记录创建时间
-    created_at DATETIME NOT NULL DEFAULT NOW(),
-);
+<p>登录接口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST http://localhost:8080/api/login/admin \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&#123;&quot;username&quot;:&quot;&lt;你的管理员账号&gt;&quot;,&quot;password&quot;:&quot;&lt;已脱敏&gt;&quot;,&quot;is_admin&quot;:1&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
 
--- 外键通常单独定义，或者在另一个表中定义
-CREATE TABLE user_profiles (
-    profile_id INT PRIMARY KEY,
-    user_id INT,
-    bio TEXT,
-    -- 外键：确保 profile 必须关联到一个有效的用户
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
+<h2 id="MySQL-常用操作"><a href="#MySQL-常用操作" class="headerlink" title="MySQL 常用操作"></a>MySQL 常用操作</h2><p>我本机装了 MySQL，错误日志位置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqld will log errors to /var/log/mysql/error.log</span><br></pre></td></tr></table></figure>
 
-增加，修改，删除表中的字段以及修改表的字段名
-ALTER TABLE dish ADD description TEXT;
-ALTER TABLE dish MODIFY price DECIMAL(10,2);
-ALTER TABLE dish DROP description;
-ALTER TABLE product CHANGE COLUMN id product_id BIGINT PRIMARY KEY;
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status mysql   <span class="comment"># 查看服务状态</span></span><br><span class="line">sudo mysql                    <span class="comment"># 直接用 root 角色免密码登录</span></span><br></pre></td></tr></table></figure>
 
-查看已有用户
-SELECT User, Host FROM mysql.user;
-查看某用户的权限：
-SHOW GRANTS FOR 'blog_user'@'localhost';
-创建用户/修改密码：
-CREATE/ALTER USER 'blog_user'@'localhost' IDENTIFIED BY '新密码';
-回收myblog的数据集的所有表的delete权限：
-REVOKE DELETE ON myblog.* FROM 'blog_user'@'localhost';
-删除用户：
-DROP USER 'blog_user'@'localhost';
-mysql8以上的密码认证都是经过加密，因此项目如果因为加密报错，需要pip install cryptography
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> TABLES;                  <span class="comment">-- 查看所有的表</span></span><br><span class="line"><span class="keyword">SHOW</span> DATABASES;               <span class="comment">-- 查看所有的数据库</span></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE XXXX;         <span class="comment">-- 创建新数据库</span></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> my_database</span><br><span class="line">  <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_unicode_ci;</span><br><span class="line">USE XXXX;                     <span class="comment">-- 切换当前使用的数据库</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> XXX;        <span class="comment">-- 查看建表语句</span></span><br><span class="line"><span class="keyword">DESC</span> XXX;                     <span class="comment">-- 查看表结构</span></span><br></pre></td></tr></table></figure>
 
+<h3 id="经典示例：带完整约束的建表"><a href="#经典示例：带完整约束的建表" class="headerlink" title="经典示例：带完整约束的建表"></a>经典示例：带完整约束的建表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> users (</span><br><span class="line">    <span class="comment">-- 1. 主键：每行的唯一标识，自增</span></span><br><span class="line">    user_id <span class="type">INT</span> AUTO_INCREMENT <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    <span class="comment">-- 2. 非空 + 唯一：用户名必填且不能重复</span></span><br><span class="line">    username <span class="type">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span>,</span><br><span class="line">    <span class="comment">-- 3. 非空 + 唯一：邮箱必填且不能重复</span></span><br><span class="line">    email <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span>,</span><br><span class="line">    <span class="comment">-- 4. 默认值：新用户默认为 &#x27;active&#x27; 状态</span></span><br><span class="line">    status <span class="type">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;active&#x27;</span>,</span><br><span class="line">    <span class="comment">-- 5. 检查：年龄必须合理</span></span><br><span class="line">    age <span class="type">INT</span> <span class="keyword">CHECK</span> (age <span class="operator">&gt;=</span> <span class="number">0</span> <span class="keyword">AND</span> age <span class="operator">&lt;=</span> <span class="number">150</span>),</span><br><span class="line">    <span class="comment">-- 6. 默认时间 + 非空：记录创建时间</span></span><br><span class="line">    created_at DATETIME <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> NOW()</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 外键通常单独定义，或者在另一个表中定义</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> user_profiles (</span><br><span class="line">    profile_id <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    user_id <span class="type">INT</span>,</span><br><span class="line">    bio TEXT,</span><br><span class="line">    <span class="comment">-- 外键：确保 profile 必须关联到一个有效的用户</span></span><br><span class="line">    <span class="keyword">FOREIGN</span> KEY (user_id) <span class="keyword">REFERENCES</span> users(user_id) <span class="keyword">ON</span> <span class="keyword">DELETE</span> CASCADE</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 
+<h3 id="修改表结构"><a href="#修改表结构" class="headerlink" title="修改表结构"></a>修改表结构</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> dish <span class="keyword">ADD</span> description TEXT;</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> dish MODIFY price <span class="type">DECIMAL</span>(<span class="number">10</span>,<span class="number">2</span>);</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> dish <span class="keyword">DROP</span> description;</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> product CHANGE <span class="keyword">COLUMN</span> id product_id <span class="type">BIGINT</span> <span class="keyword">PRIMARY</span> KEY;</span><br></pre></td></tr></table></figure>
 
-核心参数与最佳实践在使用连接池时，有几个配置和习惯可以直接影响程序的稳定性和性能：关键配置项参数建议说明minsize / maxsize决定了并发能力的上下限。一般的 Web 应用（如 FastAPI 配合 asyncmy）建议 minsize 设为 5，maxsize 设为 20-50，具体取决于你的数据库配置。pool_recycle非常重要。MySQL 默认会踢掉闲置 8 小时（甚至更短）的连接。设置此参数（例如 3600 秒）能让连接池定期回收并重连，避免出现 MySQL server has gone away 报错。autocommit如果你的查询以 SELECT 为主，或者每个 INSERT/UPDATE 都是独立操作，设为 True 更方便。如果要执行强一致性的多步操作，务必设为 False 并手动 await conn.commit()。
-避坑指南坚持使用 async with：
-无论是 pool.acquire() 还是 conn.cursor()，一定要使用 async with 上下文管理器。如果发生异常，它可以确保连接被正确归还到连接池中，否则会导致连接池耗尽（"连接泄露"）。  永远不要使用 f-string 拼接 SQL 变量：在纯 SQL 模式下，防范 SQL 注入是你自己的责任。请始终使用 %s 作为占位符，并将变量作为元组传给 cursor.execute(sql, args)。
+<h3 id="用户与权限"><a href="#用户与权限" class="headerlink" title="用户与权限"></a>用户与权限</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看已有用户</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">User</span>, Host <span class="keyword">FROM</span> mysql.user;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看某用户的权限</span></span><br><span class="line"><span class="keyword">SHOW</span> GRANTS <span class="keyword">FOR</span> <span class="string">&#x27;blog_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建用户 / 修改密码</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;blog_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;新密码&#x27;</span>;</span><br><span class="line"><span class="keyword">ALTER</span>  <span class="keyword">USER</span> <span class="string">&#x27;blog_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;新密码&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 回收 myblog 库所有表的 DELETE 权限</span></span><br><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">DELETE</span> <span class="keyword">ON</span> myblog.<span class="operator">*</span> <span class="keyword">FROM</span> <span class="string">&#x27;blog_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除用户</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> <span class="string">&#x27;blog_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
+<blockquote>
+<p>MySQL 8 以上密码认证都会加密，如果项目因为加密报错，需要 <code>pip install cryptography</code>。</p>
+</blockquote>
+<h2 id="连接池：核心参数与避坑"><a href="#连接池：核心参数与避坑" class="headerlink" title="连接池：核心参数与避坑"></a>连接池：核心参数与避坑</h2><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>minsize</code> / <code>maxsize</code></td>
+<td>决定并发能力的上下限。一般 Web 应用（如 FastAPI + asyncmy）建议 <code>minsize=5</code>，<code>maxsize=20~50</code>，具体取决于数据库配置。</td>
+</tr>
+<tr>
+<td><code>pool_recycle</code></td>
+<td><strong>非常重要</strong>。MySQL 默认会踢掉闲置 8 小时（甚至更短）的连接，设置该参数（例如 3600 秒）能让连接池定期回收并重连，避免 <code>MySQL server has gone away</code>。</td>
+</tr>
+<tr>
+<td><code>autocommit</code></td>
+<td>以 SELECT 为主、或每个 INSERT/UPDATE 都是独立操作时设为 <code>True</code> 更方便；要执行强一致性的多步操作则务必设为 <code>False</code>，并手动 <code>await conn.commit()</code>。</td>
+</tr>
+</tbody></table>
+<h3 id="避坑指南"><a href="#避坑指南" class="headerlink" title="避坑指南"></a>避坑指南</h3><ul>
+<li>**坚持使用 <code>async with</code>**：无论是 <code>pool.acquire()</code> 还是 <code>conn.cursor()</code>，一定要用 <code>async with</code> 上下文管理器。发生异常时它能确保连接被正确归还到连接池，否则会导致连接池耗尽（连接泄露）。</li>
+<li><strong>永远不要用 f-string 拼接 SQL 变量</strong>：在纯 SQL 模式下，防范 SQL 注入是你自己的责任。请始终使用 <code>%s</code> 作为占位符，并把变量作为元组传给 <code>cursor.execute(sql, args)</code>。</li>
+</ul>
 
       
     </div>

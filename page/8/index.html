@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
@@ -177,7 +177,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+                <time title="修改时间：2026-10-09 14:18:21" itemprop="dateModified" datetime="2026-10-09T14:18:21+08:00">2026-10-09</time>
               </span>
 
           
@@ -191,60 +191,63 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
-  查看事件定义	SHOW CREATE EVENT 事件名称;	查看创建该事件的完整SQL语句
-  删除事件	 DROP EVENT 事件名称;	永久删除该事件
-  临时禁用一个事件：ALTER EVENT 事件名称 DISABLE;
+          <h2 id="管理定时事件"><a href="#管理定时事件" class="headerlink" title="管理定时事件"></a>管理定时事件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看事件定义</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> EVENT 事件名称;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 永久删除该事件</span></span><br><span class="line"><span class="keyword">DROP</span> EVENT 事件名称;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 临时禁用一个事件</span></span><br><span class="line"><span class="keyword">ALTER</span> EVENT 事件名称 DISABLE;</span><br></pre></td></tr></table></figure>
 
-设计一个定时任务(事件event)：
-SET GLOBAL event_scheduler = ON;
+<h2 id="设计一个定时任务（event）"><a href="#设计一个定时任务（event）" class="headerlink" title="设计一个定时任务（event）"></a>设计一个定时任务（event）</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> event_scheduler <span class="operator">=</span> <span class="keyword">ON</span>;</span><br><span class="line"></span><br><span class="line">DELIMITER $$</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> EVENT clean_closed_orders</span><br><span class="line"><span class="keyword">ON</span> SCHEDULE <span class="keyword">EVERY</span> <span class="number">1</span> <span class="keyword">DAY</span> STARTS <span class="string">&#x27;2026-08-13 03:00:00&#x27;</span></span><br><span class="line">DO</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="comment">-- 删除 30 天前已关闭的订单</span></span><br><span class="line">  <span class="comment">-- （还需要判断 transaction_id 字段是否有值）</span></span><br><span class="line">  <span class="keyword">DELETE</span> <span class="keyword">FROM</span> `orders`</span><br><span class="line">  <span class="keyword">WHERE</span> status <span class="operator">=</span> <span class="number">-1</span></span><br><span class="line">    <span class="keyword">AND</span> create_at <span class="operator">&lt;</span> DATE_SUB(NOW(), <span class="type">INTERVAL</span> <span class="number">30</span> <span class="keyword">DAY</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 连接上一句的 where 条件，删除对应的订单商品</span></span><br><span class="line">  <span class="keyword">DELETE</span> <span class="keyword">FROM</span> `order_product` <span class="keyword">WHERE</span> `trade_id` <span class="operator">=</span> <span class="operator">%</span>(trade_id)s;</span><br><span class="line"><span class="keyword">END</span>$$</span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
 
-CREATE EVENT clean_closed_orders
-ON SCHEDULE EVERY 1 DAY STARTS '2026-08-13 03:00:00'
-DO
-BEGIN
-  DELETE FROM `orders` 
-  WHERE status = -1 
-  AND create_at < DATE_SUB(NOW(), INTERVAL 30 DAY);(还需要判断是否transaction_id的字段有值)
-  	连接上一句的where条件
-  DELETE FROM `order_product` WHERE `trade_id` = %(trade_id)s;
-END$$
-DELIMITER ;
+<blockquote>
+<p>可能有必要设置 MySQL 的内存占用上限。</p>
+</blockquote>
+<blockquote>
+<p>正式运行前需要清空数据库的 mock 数据，并将所有自增的键重置为从 1 开始。</p>
+</blockquote>
+<h2 id="加锁行为"><a href="#加锁行为" class="headerlink" title="加锁行为"></a>加锁行为</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> order_sequence <span class="keyword">WHERE</span> merchant_id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">FOR</span> UPDATE;</span><br></pre></td></tr></table></figure>
 
-可能有必要设置mysql的内存占用上限
-正式运行前需要将数据库的mock数据清楚，并将所有自增的键重置为从1开始 
+<p>这个语句会对 <code>merchant_id = 1</code> 的行加锁，而<strong>不管 <code>merchant_id</code> 是不是主键或唯一键</strong>，所以可能产生锁全表的情况。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> order_sequence (merchant_id, seq_date, current_seq)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">&#x27;2026-08-03&#x27;</span>, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">ON</span> DUPLICATE KEY UPDATE current_seq <span class="operator">=</span> current_seq <span class="operator">+</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
 
-mysql加锁:
-SELECT * FROM order_sequence WHERE merchant_id=1 FOR UPDATE;
-这个语句会对merchant_id=1的行加锁，而不管merchant_id是不是主键或唯一键，所以会可能产生锁全表的情况。
-
-INSERT INTO order_sequence (merchant_id,seq_date,current_seq) VALUES (1,'2026-08-03',1)
-ON DUPLICATE KEY UPDATE current_seq=current_seq+1;
-这个语句会对主键或唯一键冲突的行加锁
-
-mysql中的update与delete语句会自动加排他锁
-
-
-
-对商家app的修改：
-1.所有 接口都是 "api/shangjia";
-2.原则：允许类别category里面没有商品，但不允许商品product没有类别;
-3.在删除类别时提醒商家：分类下的所有只有一个类别的商品都会被删除，请谨慎操作
-4.商品 需要增加一个is_drink的字段（用来区分订单由不同的厨师处理）
-5.需要给一个可以增加商品图片的方法（仅仅上传一张图片，并选择是否为封面，上传图片大小限制在10MB以内）
-6. 根据后端，需要可以对每件商品分给指定的类别以及新增商品的类别 ,如下所表示
-|delete| `/api/shangjia/products/{id}/doCate`| `{"category_id" : XXX}`
-|get| `/api/shangjia/products/{id}/doCate`| `{"category_id" : XXX}`
-7. 提醒商家每天流水 在凌晨3点时候更新
-
-做一个后厨app
-只有一个界面：只展示当天已经支付但是没有完成的订单，点进去进入每个订单的详情页面（用户支付成功会触发刷新，并且），里面有一个出餐按钮（对应/api/orders/finish）点击后即可以修改订单状态并提醒顾客，即提醒对应小程序的订单详情页面（这里需要用websocket去接受消息）
-
-找到测试文件，运行后端的main.py并测试新增的api, 继续在这个测试文件写如测试结果
-
-在docker compose会用，并成功部署到服务器上后再用，尝试获取.env文件
-要求将这两个app都编译出来形成app文件传到github/<你的仓库名>仓库里面
-
+<p>这个语句会对主键或唯一键冲突的行加锁。</p>
+<p>另外：MySQL 中的 <code>UPDATE</code> 与 <code>DELETE</code> 语句会自动加<strong>排他锁</strong>。</p>
+<h2 id="商家-App-的改造需求"><a href="#商家-App-的改造需求" class="headerlink" title="商家 App 的改造需求"></a>商家 App 的改造需求</h2><ol>
+<li>所有接口都是 <code>api/shangjia</code> 前缀。</li>
+<li>原则：允许类别 category 里没有商品，但不允许商品 product 没有类别。</li>
+<li>删除类别时要提醒商家：该分类下的所有「只有一个类别」的商品都会被删除，请谨慎操作。</li>
+<li>商品需要增加一个 <code>is_drink</code> 字段（用来区分订单由不同的厨师处理）。</li>
+<li>需要提供一个可以增加商品图片的方法（仅上传一张图片，并选择是否为封面，上传图片大小限制在 10MB 以内）。</li>
+<li>需要可以把每件商品分给指定的类别，以及新增商品类别：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>接口</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DELETE</td>
+<td><code>/api/shangjia/products/&#123;id&#125;/doCate</code></td>
+<td><code>&#123;&quot;category_id&quot;: XXX&#125;</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/shangjia/products/&#123;id&#125;/doCate</code></td>
+<td><code>&#123;&quot;category_id&quot;: XXX&#125;</code></td>
+</tr>
+</tbody></table>
+<ol start="7">
+<li>提醒商家：每天流水在凌晨 3 点更新。</li>
+</ol>
+<h2 id="后厨-App"><a href="#后厨-App" class="headerlink" title="后厨 App"></a>后厨 App</h2><p>只有一个界面：只展示当天已经支付但没有完成的订单；点进去进入每个订单的详情页面。</p>
+<ul>
+<li>用户支付成功会触发刷新。</li>
+<li>里面有一个<strong>出餐按钮</strong>（对应 <code>/api/orders/finish</code>），点击后即可修改订单状态并提醒顾客，即提醒对应小程序的订单详情页面（这里需要用 WebSocket 接收消息）。</li>
+</ul>
+<h2 id="其他待办"><a href="#其他待办" class="headerlink" title="其他待办"></a>其他待办</h2><ul>
+<li>找到测试文件，运行后端的 <code>main.py</code> 并测试新增的 api，继续在这个测试文件里写测试结果。</li>
+<li>Docker Compose 会用、并成功部署到服务器上之后再用，尝试获取 <code>.env</code> 文件。</li>
+<li>要求将这两个 App 都编译出来形成 App 文件，传到 <code>github/&lt;你的仓库名&gt;</code> 仓库里面。</li>
+</ul>
 
       
     </div>

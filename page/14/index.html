@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
@@ -177,7 +177,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+                <time title="修改时间：2026-10-09 14:18:21" itemprop="dateModified" datetime="2026-10-09T14:18:21+08:00">2026-10-09</time>
               </span>
 
           
@@ -191,25 +191,38 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
-异常检测的几种思路：
-1.重建式
-2.预测式
-3.One-Class Learning
-4.生成式模型
-都是模型去学正常的背景信息，将原图相减就得到异常点
+          <h2 id="四种思路"><a href="#四种思路" class="headerlink" title="四种思路"></a>四种思路</h2><ol>
+<li>重建式</li>
+<li>预测式</li>
+<li>One-Class Learning</li>
+<li>生成式模型</li>
+</ol>
+<p>它们的共同点是：<strong>模型只学习正常的背景信息，再把原图与之相减，就得到异常点</strong>。</p>
+<p>对于视频红外小目标检测，我的思路就是利用异常检测的思路来处理。</p>
+<h2 id="顺手记下的杂项"><a href="#顺手记下的杂项" class="headerlink" title="顺手记下的杂项"></a>顺手记下的杂项</h2><p>查看当前全局安装了哪些 node 包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm list -g --depth=0</span><br></pre></td></tr></table></figure>
 
-对于视频红外小目标检测，我的思路是利用异常检测的思路来处理
-
-npm list -g --depth=0	//查看当前node安装哪些项目包
-
-mmdetection框架可以传入字典让 Runner来构建实例，即使用配置文件来构建实例。面向配置编程了
-
-Python语法：
-list.extend(iterable)	将可迭代对象的每个元素逐个加入列表
-*（单星号）  解包或打包（序列/元组）
-**（双星号）  解包或打包（字典）	
-
+<p>mmdetection 框架可以传入字典让 Runner 来构建实例，也就是<strong>用配置文件来构建实例</strong>——算是「面向配置编程」了。</p>
+<h2 id="Python-语法备忘"><a href="#Python-语法备忘" class="headerlink" title="Python 语法备忘"></a>Python 语法备忘</h2><table>
+<thead>
+<tr>
+<th>写法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>list.extend(iterable)</code></td>
+<td>将可迭代对象的每个元素逐个加入列表</td>
+</tr>
+<tr>
+<td><code>*</code>（单星号）</td>
+<td>解包或打包（序列 / 元组）</td>
+</tr>
+<tr>
+<td><code>**</code>（双星号）</td>
+<td>解包或打包（字典）</td>
+</tr>
+</tbody></table>
 
       
     </div>

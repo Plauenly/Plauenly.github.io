@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
@@ -177,7 +177,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+                <time title="修改时间：2026-10-09 14:18:21" itemprop="dateModified" datetime="2026-10-09T14:18:21+08:00">2026-10-09</time>
               </span>
 
           
@@ -191,26 +191,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
-去掉-v参数就可以静默运行
-tar -czvf 压缩包名称.tar.gz /路径/要压缩的文件夹或文件
-tar -xzvf 文件名.tar.gz -C /目标路径/
+          <h2 id="打包与解压"><a href="#打包与解压" class="headerlink" title="打包与解压"></a>打包与解压</h2><h3 id="tar（gz）"><a href="#tar（gz）" class="headerlink" title="tar（gz）"></a>tar（gz）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 压缩</span></span><br><span class="line">tar -czvf 压缩包名称.tar.gz /路径/要压缩的文件夹或文件</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压到指定目录</span></span><br><span class="line">tar -xzvf 文件名.tar.gz -C /目标路径/</span><br></pre></td></tr></table></figure>
 
-加上-q参数就可以静默运行
-zip -r 压缩包名称.zip /路径/要压缩的文件夹或文件		(-r : 递归处理)
-unzip 文件名.zip -d /目标路径/
+<ul>
+<li>去掉 <code>-v</code> 参数即可静默运行。</li>
+</ul>
+<h3 id="zip"><a href="#zip" class="headerlink" title="zip"></a>zip</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 压缩（-r 递归处理）</span></span><br><span class="line">zip -r 压缩包名称.zip /路径/要压缩的文件夹或文件</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压到指定目录（-q 静默运行）</span></span><br><span class="line">unzip 文件名.zip -d /目标路径/</span><br></pre></td></tr></table></figure>
 
-传输文件：
-scp /本地路径/压缩包名称  用户名@接收方IP地址:/远程目标路径/ （注意其中的冒号不能省略）
-npm update -g openclaw@latest
-openclaw gateway restart
+<h2 id="传输文件"><a href="#传输文件" class="headerlink" title="传输文件"></a>传输文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp /本地路径/压缩包名称 用户名@接收方IP地址:/远程目标路径/</span><br></pre></td></tr></table></figure>
 
-    openclaw status — 快速看 Gateway 是否活着
-    openclaw gateway status — 看 systemd 状态和 PID
-    systemctl --user status openclaw-gateway -系统查找
-    openclaw logs --follow — 实时盯日志找报错
-    journalctl --user -u openclaw-gateway -n 50 — 如果 Gateway 起不来，看 systemd 日志
-    cat /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
+<blockquote>
+<p>注意：其中的冒号不能省略。</p>
+</blockquote>
+<h2 id="openclaw-常用命令"><a href="#openclaw-常用命令" class="headerlink" title="openclaw 常用命令"></a>openclaw 常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm update -g openclaw@latest</span><br><span class="line">openclaw gateway restart</span><br></pre></td></tr></table></figure>
+
+<p>排查问题时的几条命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">openclaw status                                  <span class="comment"># 快速看 Gateway 是否活着</span></span><br><span class="line">openclaw gateway status                          <span class="comment"># 看 systemd 状态和 PID</span></span><br><span class="line">systemctl --user status openclaw-gateway         <span class="comment"># 系统层面查找</span></span><br><span class="line">openclaw logs --follow                           <span class="comment"># 实时盯日志找报错</span></span><br><span class="line">journalctl --user -u openclaw-gateway -n 50      <span class="comment"># Gateway 起不来时看 systemd 日志</span></span><br><span class="line">cat /tmp/openclaw/openclaw-$(date +%Y-%m-%d).<span class="built_in">log</span> <span class="comment"># 直接看当天的日志文件</span></span><br></pre></td></tr></table></figure>
 
 
       

@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"plauenly.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
@@ -177,7 +177,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-09-26 19:53:04" itemprop="dateModified" datetime="2026-09-26T19:53:04+08:00">2026-09-26</time>
+                <time title="修改时间：2026-10-09 14:18:21" itemprop="dateModified" datetime="2026-10-09T14:18:21+08:00">2026-10-09</time>
               </span>
 
           
@@ -191,41 +191,88 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
-### pi agent学习
-使用/model来切换模型
-使用快捷键shift+tab来切换模型的思考强度
-使用/new新开一个session
-在当前对话窗口临时运行一个命令：1. '!docker logs -f fastapi',模型可以看见我们的命令以及命令运行过程 2. '!!docker logs -f fastapi'不让ai看见命令运行
-如果要指明讨论某个文件，使用@来标记要讨论的文件，或者可以粘贴在当前目录下的文件路径
-当发现pi在执行过程中理解错了我们的意思，直接在对话框补充信息回车，默认消息以steering的方式注入（注入的时机是agent在执行完一轮agent loop后再注入steering消息）。
-使用alt+enter将我们的消息以follow-up的方式注入（ai会在任务完成后再查看我们的消息，即排队）
+          <h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/model</code></td>
+<td>切换模型</td>
+</tr>
+<tr>
+<td><code>Shift + Tab</code></td>
+<td>切换模型的思考强度</td>
+</tr>
+<tr>
+<td><code>/new</code></td>
+<td>新开一个 session</td>
+</tr>
+<tr>
+<td><code>!命令</code></td>
+<td>在当前对话窗口临时运行命令，模型可以看见命令以及运行过程</td>
+</tr>
+<tr>
+<td><code>!!命令</code></td>
+<td>同上，但不让 AI 看见命令运行</td>
+</tr>
+<tr>
+<td><code>@文件</code></td>
+<td>指明要讨论的文件；也可以直接粘贴当前目录下的文件路径</td>
+</tr>
+<tr>
+<td><code>/tree</code></td>
+<td>进入单个 session 的对话树，可选择历史对话回退</td>
+</tr>
+<tr>
+<td><code>/compact</code></td>
+<td>压缩上下文</td>
+</tr>
+</tbody></table>
+<h3 id="steering-与-follow-up"><a href="#steering-与-follow-up" class="headerlink" title="steering 与 follow-up"></a>steering 与 follow-up</h3><ul>
+<li>发现 pi 理解错了意思时，直接在对话框补充信息回车，默认消息以 <strong>steering</strong> 方式注入。注入时机是 agent 执行完一轮 agent loop 之后。</li>
+<li>使用 <code>Alt + Enter</code> 把消息以 <strong>follow-up</strong> 方式注入：AI 会在任务完成后再查看消息，相当于排队。</li>
+</ul>
+<h3 id="命令行模式"><a href="#命令行模式" class="headerlink" title="命令行模式"></a>命令行模式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pi -p <span class="string">&quot;msg&quot;</span>              <span class="comment"># 静默执行 msg，不开启任何对话框</span></span><br><span class="line">pi --mode json <span class="string">&quot;你的提示词&quot;</span></span><br><span class="line">pi -c                    <span class="comment"># 从最近的一次 session 继续对话</span></span><br><span class="line">pi -r                    <span class="comment"># 从会话记录中挑选一个会话来继续</span></span><br></pre></td></tr></table></figure>
 
-使用pi -p "msg"指令，来让pi静默执行"msg"命令而不开启任何对话框，类似于pi --mode json "你的提示词"。
-使用pi -c 指令，来让pi从最近的一次session继续对话；使用pi -r可以从会话记录中挑选一个会话来继续对话。
-对话框中使用/tree进入单个session的对话树，并可以选择一个历史对话进行回退,使用summarize选项可以让pi在回退后对当前对话有个大概的印象。配合git工具可以实现对话与代码的双回退
-遵循一个session一个任务原则，使用/compact来压缩上下文
-pi install ... (-l), -l即local,将插件安装到项目目录下，仅对当前项目生效。（因为全局安装的话，插件都会在会话开启后占用一定的上下文 空间）
-安装btw插件实现旁路对话的功能，安装mcp可以让pi具备例如调用高德地图的功能，安装plan插件可以让pi先生成计划再执行。
-
-RPC 模式让 Pi Agent 以“无头”方式运行，通过 标准输入/输出（stdin/stdout） 与外部程序通信，而不是在终端里显示交互界面
-
-
-
-代码智能体的核心问题：
-1. 循环（while True）维护（而pi agent是双层循环）
-2. 上下文工程
-3. 工具调用
-
-docker的再学习：
-在docker中创建的用户与宿主机的用户是隔离的，但是如果两者的uid是一致（对齐的），那么docker中创建的文件宿主机就可以正常读写，反之亦然。
-docker-compose build 是 docker build 的再封装，两者最终构建出的镜像内容没有区别，只是compose方法可以在docker-compose.yml文件中的build的配置中处理了命名和参数传递等。
-当 docker-compose.yml 里同时定义了 image 和 build 时，Compose 默认的策略是先尝试从镜像仓库拉取 image 指定的镜像。如果拉取成功，就直接用它；如果拉取失败，才会回退到本地构建build.
-
-env 是 Linux 系统里的一个可执行程序（通常在 /usr/bin/env），它的作用是临时设置环境变量并执行命令。
-ENV 是 Dockerfile 的一个构建指令，用来设置镜像的默认环境变量。
-
-docker inspect <container_name> | grep -i env
+<h3 id="对话树与回退"><a href="#对话树与回退" class="headerlink" title="对话树与回退"></a>对话树与回退</h3><p>在对话框中使用 <code>/tree</code> 进入单个 session 的对话树，并可以选择一个历史对话进行回退；使用 <code>summarize</code> 选项可以让 pi 在回退后对当前对话有个大概的印象。配合 Git 工具，可以实现对话与代码的双回退。</p>
+<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><ul>
+<li>遵循<strong>一个 session 一个任务</strong>原则，用 <code>/compact</code> 压缩上下文。</li>
+<li><code>pi install ... -l</code>：<code>-l</code> 即 local，将插件安装到项目目录下，仅对当前项目生效。（因为全局安装的话，插件都会在会话开启后占用一定的上下文空间）</li>
+<li>安装 <code>btw</code> 插件实现旁路对话的功能；</li>
+<li>安装 MCP 可以让 pi 具备例如调用高德地图的功能；</li>
+<li>安装 <code>plan</code> 插件可以让 pi 先生成计划再执行。</li>
+</ul>
+<h3 id="RPC-模式"><a href="#RPC-模式" class="headerlink" title="RPC 模式"></a>RPC 模式</h3><p>RPC 模式让 Pi Agent 以「无头」方式运行，通过标准输入/输出（stdin/stdout）与外部程序通信，而不是在终端里显示交互界面。</p>
+<h2 id="代码智能体的核心问题"><a href="#代码智能体的核心问题" class="headerlink" title="代码智能体的核心问题"></a>代码智能体的核心问题</h2><ol>
+<li>循环（<code>while True</code>）维护（而 pi agent 是双层循环）</li>
+<li>上下文工程</li>
+<li>工具调用</li>
+</ol>
+<h2 id="Docker-再学习"><a href="#Docker-再学习" class="headerlink" title="Docker 再学习"></a>Docker 再学习</h2><ul>
+<li>Docker 中创建的用户与宿主机的用户是隔离的；但如果两者的 uid 一致（对齐），那么 Docker 中创建的文件宿主机就可以正常读写，反之亦然。</li>
+<li><code>docker-compose build</code> 是 <code>docker build</code> 的再封装，两者最终构建出的镜像内容没有区别，只是 compose 方法可以在 <code>docker-compose.yml</code> 的 build 配置中处理命名和参数传递等。</li>
+<li>当 <code>docker-compose.yml</code> 里同时定义了 <code>image</code> 和 <code>build</code> 时，Compose 默认策略是<strong>先尝试从镜像仓库拉取 <code>image</code> 指定的镜像</strong>；拉取成功就直接用它，拉取失败才会回退到本地构建。</li>
+</ul>
+<h3 id="env-与-ENV"><a href="#env-与-ENV" class="headerlink" title="env 与 ENV"></a>env 与 ENV</h3><table>
+<thead>
+<tr>
+<th>写法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>env</code></td>
+<td>Linux 系统里的一个可执行程序（通常在 <code>/usr/bin/env</code>），作用是临时设置环境变量并执行命令。</td>
+</tr>
+<tr>
+<td><code>ENV</code></td>
+<td>Dockerfile 的一个构建指令，用来设置镜像的默认环境变量。</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect &lt;container_name&gt; | grep -i env</span><br></pre></td></tr></table></figure>
 
 
       
