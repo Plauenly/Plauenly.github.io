@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/23/2026-08-23-%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E3%80%81httpx-%E5%B0%81%E8%A3%85%E4%B8%8E%E5%BC%82%E5%B8%B8%E4%BC%A0%E6%92%AD/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/09/04/2026-09-04-pi-%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/08/23/2026-08-23-%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E3%80%81httpx-%E5%B0%81%E8%A3%85%E4%B8%8E%E5%BC%82%E5%B8%B8%E4%BC%A0%E6%92%AD/" class="post-title-link" itemprop="url">容器日志、httpx 封装与异常传播</a>
+            <a href="/2026/09/04/2026-09-04-pi-%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">pi 的两种启动方式</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-08-23 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-23T09:00:00+08:00">2026-08-23</time>
+              <time title="创建时间：2026-09-04 09:00:00" itemprop="dateCreated datePublished" datetime="2026-09-04T09:00:00+08:00">2026-09-04</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -191,18 +191,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="查看容器日志位置"><a href="#查看容器日志位置" class="headerlink" title="查看容器日志位置"></a>查看容器日志位置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;.LogPath&#125;&#125;&#x27;</span> &lt;容器名或ID&gt;</span><br></pre></td></tr></table></figure>
-
-<p>默认在 <code>/var/lib/docker/containers/容器id</code> 下。</p>
-<h2 id="日志方案：StreamHandler-日志轮转"><a href="#日志方案：StreamHandler-日志轮转" class="headerlink" title="日志方案：StreamHandler + 日志轮转"></a>日志方案：StreamHandler + 日志轮转</h2><p>用 <code>StreamHandler</code>，然后在 <code>docker-compose.yml</code> 里配置轮转日志：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">your-service:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:latest</span></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">      <span class="attr">driver:</span> <span class="string">&quot;json-file&quot;</span>   <span class="comment"># 日志驱动：Docker 容器默认捕获 stdout/stderr，</span></span><br><span class="line">                            <span class="comment"># 然后由日志驱动决定：1.日志存哪里 2.如何格式化 3.是否发送到外部系统</span></span><br><span class="line">      <span class="attr">options:</span>              <span class="comment"># 驱动选项</span></span><br><span class="line">        <span class="attr">max-size:</span> <span class="string">&quot;10m&quot;</span>     <span class="comment"># 单个文件最大字节</span></span><br><span class="line">        <span class="attr">max-file:</span> <span class="string">&quot;3&quot;</span>       <span class="comment"># 最多保存的日志文件数</span></span><br><span class="line">        <span class="attr">compress:</span> <span class="string">&quot;true&quot;</span>    <span class="comment"># 消耗 cpu 来对轮转日志压缩与解压缩</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>docker logs</code> 读取的是容器的「标准输出（stdout）」和「标准错误（stderr）」流。</p>
-</blockquote>
-<h2 id="封装-httpx-AsyncClient"><a href="#封装-httpx-AsyncClient" class="headerlink" title="封装 httpx.AsyncClient"></a>封装 httpx.AsyncClient</h2><p>目标：有重试与异常处理，有日志功能，并且为每个 IP 地址以及访问的接口进行计时。</p>
-<h2 id="raise-的作用"><a href="#raise-的作用" class="headerlink" title="raise 的作用"></a>raise 的作用</h2><p><code>raise</code> 的核心作用是「抛出异常」：中断当前函数的正常执行流程，把控制权交给<strong>上层调用栈</strong>中的异常处理器（即 <code>try...except</code> 语句块），并且逐层向上冒泡（propagation）——异常会一层层向上传递，直到找到 <code>except</code> 或者到达顶层（<code>__main__</code>）。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">    ...</span><br><span class="line">except SomeError as e:</span><br><span class="line">    raise   # 继续往上抛，交给上层处理</span><br></pre></td></tr></table></figure>
+          <p>我现在设置了 <code>wx-pi</code> 与 <code>pi</code> 两种启动方式，并且可以把当前启动的目录作为 pi-agent 的工作目录。两者的区别是：</p>
+<table>
+<thead>
+<tr>
+<th>启动命令</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>wx-pi</code></td>
+<td>创建一个无头、后台常住的、装在 Docker 中的 pi；需要 <code>/wechat autostart</code> 才能自动连接到微信。</td>
+</tr>
+<tr>
+<td><code>pi</code></td>
+<td>创建一个一次性的、装在 Docker 中的 pi 的 TUI 界面；输入 <code>/quit</code> 便结束这次 session。</td>
+</tr>
+</tbody></table>
+<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a>小技巧</h2><p>可以在项目目录下建立一个 <code>AGENTS.md</code> 文件来概括项目全貌，这样每次对话开始时，pi 都会把它追加到上下文中。</p>
+<h2 id="配置目录位置"><a href="#配置目录位置" class="headerlink" title="配置目录位置"></a>配置目录位置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pi 的文件夹挂载在：</span><br><span class="line">/var/lib/docker/volumes/construct-pi-agent_pi_config/_data</span><br></pre></td></tr></table></figure>
 
 
       
@@ -222,7 +229,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -288,7 +295,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -297,7 +304,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

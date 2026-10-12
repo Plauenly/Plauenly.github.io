@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/07/31/2026-07-31-asyncio-%E4%B8%8E-FastAPI-%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/07/2026-08-07-MySQL-%E4%BA%8B%E5%8A%A1%E3%80%81%E9%94%81%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7%E8%AF%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/07/31/2026-07-31-asyncio-%E4%B8%8E-FastAPI-%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">asyncio 与 FastAPI 并发模型</a>
+            <a href="/2026/08/07/2026-08-07-MySQL-%E4%BA%8B%E5%8A%A1%E3%80%81%E9%94%81%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7%E8%AF%BB/" class="post-title-link" itemprop="url">MySQL 事务、锁与一致性读</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-07-31 09:00:00" itemprop="dateCreated datePublished" datetime="2026-07-31T09:00:00+08:00">2026-07-31</time>
+              <time title="创建时间：2026-08-07 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-07T09:00:00+08:00">2026-08-07</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -191,51 +191,50 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="事件循环与-asyncio"><a href="#事件循环与-asyncio" class="headerlink" title="事件循环与 asyncio"></a>事件循环与 asyncio</h2><p><code>asyncio.run()</code> 会创建一个 event loop，把 <code>main()</code> 协程作为循环上的第一个任务运行；当 <code>main</code> 执行完毕后，自动关闭并清理该 event loop。</p>
-<h2 id="FastAPI-的并发模型"><a href="#FastAPI-的并发模型" class="headerlink" title="FastAPI 的并发模型"></a>FastAPI 的并发模型</h2><p>uvicorn 服务器会调用类似 <code>asyncio.run()</code> 的机制，启动一个长期运行的事件循环。</p>
+          <h2 id="一致性读与隔离级别"><a href="#一致性读与隔离级别" class="headerlink" title="一致性读与隔离级别"></a>一致性读与隔离级别</h2><p>普通 <code>SELECT</code> 在 <strong>REPEATABLE READ</strong>（MySQL 默认）下永远只看到事务开始时的快照，这也被称为 MVCC（多版本并发控制）；而在 <strong>READ COMMITTED</strong>（Oracle 默认）下，普通 <code>SELECT</code> 可以看到别的事务已经提交的数据。</p>
 <ul>
-<li>在 FastAPI 中，被路由注册的异步函数都是这个 event loop 的协程函数。</li>
-<li>当某个协程因为 IO 操作阻塞时，event loop 会让它挂起，并从就绪队列中取出新的协程函数执行。</li>
-<li>FastAPI / uvicorn 的默认模式是<strong>单线程 + 协程并发</strong>：在单线程上利用 CPU 与 IO 同时执行的原理，实现函数异步执行。</li>
+<li>InnoDB 默认隔离级别为 REPEATABLE READ</li>
+<li>默认锁类型为 gap lock</li>
 </ul>
+<h2 id="自动更新时间戳"><a href="#自动更新时间戳" class="headerlink" title="自动更新时间戳"></a>自动更新时间戳</h2><p>当这条数据的任意字段被修改时，<code>update_time</code> 会自动更新为修改那一刻的时间。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`update_time` DATETIME <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="keyword">ON</span> UPDATE <span class="built_in">CURRENT_TIMESTAMP</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p>注意：FastAPI 中只能有一个事件循环，也就是 uvicorn 自己创建的那个。</p>
+<p>如果你执行 UPDATE 把某个字段改为和原来一样的值（没有实际变化），MySQL 默认不会触发更新，<code>update_time</code> 也不会变。</p>
 </blockquote>
-<h2 id="读取请求体的两种方式"><a href="#读取请求体的两种方式" class="headerlink" title="读取请求体的两种方式"></a>读取请求体的两种方式</h2><p><code>await request.body()</code> 与 <code>await request.json()</code> 的核心区别：</p>
-<table>
-<thead>
-<tr>
-<th>写法</th>
-<th>返回值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>await request.body()</code></td>
-<td>原始字节数据</td>
-</tr>
-<tr>
-<td><code>await request.json()</code></td>
-<td>解析好的 Python 字典 / 列表对象</td>
-</tr>
-</tbody></table>
-<p>如果是几百 MB 的大文件，请使用 <code>request.stream()</code> 进行<strong>流式读取</strong>，避免内存溢出。</p>
-<h2 id="应用级状态"><a href="#应用级状态" class="headerlink" title="应用级状态"></a>应用级状态</h2><p><code>request.app.state</code> 里面能保存整个应用都能用上的静态对象。</p>
-<h2 id="Path-参数与-Query-参数"><a href="#Path-参数与-Query-参数" class="headerlink" title="Path 参数与 Query 参数"></a>Path 参数与 Query 参数</h2><table>
-<thead>
-<tr>
-<th>示例</th>
-<th>参数类型</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>GET /orders/123</code> 中的 <code>123</code></td>
-<td>path 参数</td>
-</tr>
-<tr>
-<td><code>GET /orders?page=1&amp;size=20</code> 中的 <code>page</code>、<code>size</code></td>
-<td>query 参数</td>
-</tr>
-</tbody></table>
+<h2 id="序列号生成与加锁"><a href="#序列号生成与加锁" class="headerlink" title="序列号生成与加锁"></a>序列号生成与加锁</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> order_sequence (merchant_id, seq_date, num)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">&#x27;2026-08-07&#x27;</span>, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">ON</span> DUPLICATE KEY UPDATE num <span class="operator">=</span> num <span class="operator">+</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在 InnoDB 中这<strong>整个是一条原子操作</strong>，应用程序无法在中间插入。</p>
+<p>执行 <code>SELECT ... WHERE k = 2 FOR UPDATE</code> 时，如果表中 k 最大为 1 且 k 为唯一索引，InnoDB 会锁住索引的 <code>(1, 正无穷)</code> 这个开区间。</p>
+<h2 id="查看仓库分叉情况"><a href="#查看仓库分叉情况" class="headerlink" title="查看仓库分叉情况"></a>查看仓库分叉情况</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> --oneline --graph --decorate --all</span><br></pre></td></tr></table></figure>
+
+<h2 id="微信支付相关"><a href="#微信支付相关" class="headerlink" title="微信支付相关"></a>微信支付相关</h2><p>开发过程中，请将应答的 HTTP 头 <code>Request-ID</code> 值打印到日志中。<code>Request-ID</code> 作为请求的唯一标识，在调用接口遇到问题时，可向微信侧提供该值，用于快速定位请求记录、协助排查问题原因。</p>
+<h3 id="解密支付回调"><a href="#解密支付回调" class="headerlink" title="解密支付回调"></a>解密支付回调</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives.ciphers.aead <span class="keyword">import</span> AESGCM</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt</span>(<span class="params">nonce, ciphertext, associated_data</span>):</span></span><br><span class="line">    key = <span class="string">&quot;Your32Apiv3Key&quot;</span></span><br><span class="line">    key_bytes = <span class="built_in">str</span>.encode(key)</span><br><span class="line">    nonce_bytes = <span class="built_in">str</span>.encode(nonce)</span><br><span class="line">    ad_bytes = <span class="built_in">str</span>.encode(associated_data)</span><br><span class="line">    data = base64.b64decode(ciphertext)</span><br><span class="line">    aesgcm = AESGCM(key_bytes)</span><br><span class="line">    <span class="keyword">return</span> aesgcm.decrypt(nonce_bytes, data, ad_bytes)</span><br></pre></td></tr></table></figure>
+
+<p>回调报文结构：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;id&quot;</span>: <span class="string">&quot;EV-2018022511223320873&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;create_time&quot;</span>: <span class="string">&quot;2015-05-20T13:29:35+08:00&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;resource_type&quot;</span>: <span class="string">&quot;encrypt-resource&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;event_type&quot;</span>: <span class="string">&quot;TRANSACTION.SUCCESS&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;summary&quot;</span>: <span class="string">&quot;支付成功&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;resource&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;original_type&quot;</span>: <span class="string">&quot;transaction&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;algorithm&quot;</span>: <span class="string">&quot;AEAD_AES_256_GCM&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;ciphertext&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;associated_data&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;nonce&quot;</span>: <span class="string">&quot;&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="一次改造的改动总结"><a href="#一次改造的改动总结" class="headerlink" title="一次改造的改动总结"></a>一次改造的改动总结</h2><h3 id="后端-router-order-py"><a href="#后端-router-order-py" class="headerlink" title="后端 router/order.py"></a>后端 <code>router/order.py</code></h3><p>下单接口 <code>POST /api/orders</code> 的返回从原来的 <code>&#123;&quot;order_id&quot;: prepay_id&#125;</code> 改为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;order_id&quot;</span>: <span class="number">42</span>,                    <span class="comment">// 真实数据库订单ID（取餐码用）</span></span><br><span class="line">  <span class="attr">&quot;prepay_id&quot;</span>: <span class="string">&quot;wx20141027...&quot;</span>,      <span class="comment">// 微信预支付ID</span></span><br><span class="line">  <span class="attr">&quot;timeStamp&quot;</span>: <span class="string">&quot;1712345678&quot;</span>,         <span class="comment">// 10位秒级时间戳</span></span><br><span class="line">  <span class="attr">&quot;nonceStr&quot;</span>: <span class="string">&quot;a1b2c3d4...&quot;</span>,         <span class="comment">// 32位随机字符串</span></span><br><span class="line">  <span class="attr">&quot;signType&quot;</span>: <span class="string">&quot;RSA&quot;</span>,                 <span class="comment">// 签名类型</span></span><br><span class="line">  <span class="attr">&quot;paySign&quot;</span>: <span class="string">&quot;oR9d8PuhnIc+...&quot;</span>       <span class="comment">// RSA签名（base64）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关键步骤：</p>
+<ol>
+<li>调用微信 JSAPI 下单，拿到 <code>prepay_id</code></li>
+<li>用 <code>secrets.token_hex(16)</code> 生成随机 <code>nonceStr</code></li>
+<li>按微信规范构建签名串 <code>appId\ntimeStamp\nnonceStr\nprepay_id=xxx\n</code></li>
+<li>用商户私钥 RSA-SHA256 签名 → <code>paySign</code></li>
+</ol>
+<h3 id="前端-pay-vue-支付流程"><a href="#前端-pay-vue-支付流程" class="headerlink" title="前端 pay.vue 支付流程"></a>前端 <code>pay.vue</code> 支付流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">点击支付 → submitOrder(后端)</span><br><span class="line">              ↓</span><br><span class="line">         拿到 prepay_id + 签名参数</span><br><span class="line">              ↓</span><br><span class="line">         uni.requestPayment（弹出微信收银台）</span><br><span class="line">              ↓</span><br><span class="line">    ┌─────────┴─────────┐</span><br><span class="line">  success              fail</span><br><span class="line">    ↓                    ↓</span><br><span class="line"> 清购物车           cancel → &quot;已取消支付&quot;</span><br><span class="line"> 跳成功页           其他 → &quot;支付失败，请重试&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li><strong>后端 <code>.env</code> 需要正确配置</strong>：<code>WECHAT_APP_ID</code>、<code>WECHAT_MECHANT_ID</code>、<code>WECHAT_APP_PRIVATE_KEY_PATH</code>、<code>WECHAT_APP_PUBLIC_KEY_PATH</code>、<code>WECHAT_MECHANT_SERIAL_NO</code> 必须填写正确。</li>
+<li><strong><code>paySign</code> 签名用的 appId 必须和 JSAPI 下单时用的 appId 一致</strong>，微信会校验。</li>
+<li><code>wx.requestPayment</code> 的前端回调<strong>不完全可靠</strong>，正式环境建议结合后端的支付回调通知（<code>/api/orders/act/weixin</code>）和主动查单来确认订单状态。</li>
+<li><code>order_id</code> 恢复为真实数据库 ID（取餐码 <code>P0042</code> 格式），不再是 <code>prepay_id</code>。</li>
+</ol>
+<h3 id="整体流程图"><a href="#整体流程图" class="headerlink" title="整体流程图"></a>整体流程图</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">          创建支付订单</span><br><span class="line">               │</span><br><span class="line">               ▼</span><br><span class="line">           prepay_id</span><br><span class="line">               │</span><br><span class="line">               ▼</span><br><span class="line">        小程序支付/重新支付</span><br><span class="line">               │</span><br><span class="line">      ┌────────┴────────┐</span><br><span class="line">      ▼                 ▼</span><br><span class="line">前端支付结果        微信支付回调</span><br><span class="line">      │                 │</span><br><span class="line">      ▼                 ▼</span><br><span class="line">   后端查单         后端验签/解密</span><br><span class="line">      │                 │</span><br><span class="line">      └────────┬────────┘</span><br><span class="line">               ▼</span><br><span class="line">          统一处理订单</span><br><span class="line">               │</span><br><span class="line">               ▼</span><br><span class="line">         MySQL 事务更新</span><br><span class="line">               │</span><br><span class="line">               ▼</span><br><span class="line">          订单 → 已支付</span><br></pre></td></tr></table></figure>
+
+<h2 id="遗留疑问"><a href="#遗留疑问" class="headerlink" title="遗留疑问"></a>遗留疑问</h2><p>base64 编码与 utf-8 编码有什么区别？为什么前者常见于保密工作中？</p>
 
       
     </div>
@@ -254,7 +253,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -320,7 +319,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -329,7 +328,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

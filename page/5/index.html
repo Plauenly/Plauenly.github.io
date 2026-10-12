@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/09/04/2026-09-04-pi-%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/09/10/2026-09-10-git-rm-%E4%B8%8E%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/09/04/2026-09-04-pi-%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">pi 的两种启动方式</a>
+            <a href="/2026/09/10/2026-09-10-git-rm-%E4%B8%8E%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81/" class="post-title-link" itemprop="url">git rm 与多进程状态</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-09-04 09:00:00" itemprop="dateCreated datePublished" datetime="2026-09-04T09:00:00+08:00">2026-09-04</time>
+              <time title="创建时间：2026-09-10 09:00:00" itemprop="dateCreated datePublished" datetime="2026-09-10T09:00:00+08:00">2026-09-10</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -191,26 +191,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>我现在设置了 <code>wx-pi</code> 与 <code>pi</code> 两种启动方式，并且可以把当前启动的目录作为 pi-agent 的工作目录。两者的区别是：</p>
-<table>
-<thead>
-<tr>
-<th>启动命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>wx-pi</code></td>
-<td>创建一个无头、后台常住的、装在 Docker 中的 pi；需要 <code>/wechat autostart</code> 才能自动连接到微信。</td>
-</tr>
-<tr>
-<td><code>pi</code></td>
-<td>创建一个一次性的、装在 Docker 中的 pi 的 TUI 界面；输入 <code>/quit</code> 便结束这次 session。</td>
-</tr>
-</tbody></table>
-<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a>小技巧</h2><p>可以在项目目录下建立一个 <code>AGENTS.md</code> 文件来概括项目全貌，这样每次对话开始时，pi 都会把它追加到上下文中。</p>
-<h2 id="配置目录位置"><a href="#配置目录位置" class="headerlink" title="配置目录位置"></a>配置目录位置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pi 的文件夹挂载在：</span><br><span class="line">/var/lib/docker/volumes/construct-pi-agent_pi_config/_data</span><br></pre></td></tr></table></figure>
+          <h2 id="git-rm-–cached"><a href="#git-rm-–cached" class="headerlink" title="git rm –cached"></a>git rm –cached</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached &lt;file&gt;</span><br></pre></td></tr></table></figure>
 
+<p>效果：文件不再被 Git 跟踪（会从暂存区移除），但本地磁盘上的文件还在。常用于把已跟踪的文件加入 <code>.gitignore</code>。</p>
+<h2 id="查看系统信息"><a href="#查看系统信息" class="headerlink" title="查看系统信息"></a>查看系统信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/os-release   <span class="comment"># 获得关于系统的更详细信息</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="多进程下的静态变量"><a href="#多进程下的静态变量" class="headerlink" title="多进程下的静态变量"></a>多进程下的静态变量</h2><p>单进程状态下的顶层代码（缩进为 0 的代码：包括函数、类的定义，静态变量的创建，以及 import 语句）只会执行一次；但在多进程下，<strong>每个进程都会保留一个静态变量的副本</strong>。</p>
+<p>所以多进程之间的通信或许就需要借助 Redis。</p>
+<h2 id="多级排序"><a href="#多级排序" class="headerlink" title="多级排序"></a>多级排序</h2><p>MySQL 完全支持多字段嵌套排序（也叫多级排序、复合排序）：在 <code>ORDER BY</code> 后面依次列出多个字段，每个字段可以单独指定 <code>ASC</code>（升序）或 <code>DESC</code>（降序）；<code>LIMIT 1</code> 表示只取 1 行。</p>
+<h2 id="pydantic-alias-机制的坑"><a href="#pydantic-alias-机制的坑" class="headerlink" title="pydantic alias 机制的坑"></a>pydantic alias 机制的坑</h2><ol>
+<li>FastAPI 默认 <code>response_model_by_alias=True</code>，也就是说响应默认会用 alias。</li>
+<li>而 <code>model_dump()</code> / <code>model_dump_json()</code> 手动序列化时，Pydantic v2 默认 <code>by_alias=False</code>，输出的是字段名，需要显式指定 <code>by_alias=True</code>。</li>
+</ol>
 
       
     </div>
@@ -229,7 +221,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -295,7 +287,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -304,7 +296,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

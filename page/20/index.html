@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/05/12/2026-05-12-Git-%E6%8E%A8%E9%80%81%E8%B8%A9%E5%9D%91%E4%B8%8E-SSH-%E8%AE%A4%E8%AF%81/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/05/13/2026-05-13-%E6%88%91%E7%9A%84%E4%BA%94%E5%B9%B4%E8%AE%A1%E5%88%92/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/05/12/2026-05-12-Git-%E6%8E%A8%E9%80%81%E8%B8%A9%E5%9D%91%E4%B8%8E-SSH-%E8%AE%A4%E8%AF%81/" class="post-title-link" itemprop="url">Git 推送踩坑与 SSH 认证</a>
+            <a href="/2026/05/13/2026-05-13-%E6%88%91%E7%9A%84%E4%BA%94%E5%B9%B4%E8%AE%A1%E5%88%92/" class="post-title-link" itemprop="url">我的五年计划</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-05-12 09:00:00" itemprop="dateCreated datePublished" datetime="2026-05-12T09:00:00+08:00">2026-05-12</time>
+              <time title="创建时间：2026-05-13 09:00:00" itemprop="dateCreated datePublished" datetime="2026-05-13T09:00:00+08:00">2026-05-13</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -191,18 +191,29 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>远程仓库地址形如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git@github.com:&lt;你的用户名&gt;/Watch.git</span><br></pre></td></tr></table></figure>
-
-<h2 id="推送遇到的两个坑"><a href="#推送遇到的两个坑" class="headerlink" title="推送遇到的两个坑"></a>推送遇到的两个坑</h2><h3 id="1-22-端口被拒"><a href="#1-22-端口被拒" class="headerlink" title="1. 22 端口被拒"></a>1. 22 端口被拒</h3><p>表现为 <code>git push</code> 卡死。解决办法：在 <code>~/.ssh/config</code> 中配置改用 443 端口。</p>
-<h3 id="2-用户名密码登录报莫名其妙的错"><a href="#2-用户名密码登录报莫名其妙的错" class="headerlink" title="2. 用户名密码登录报莫名其妙的错"></a>2. 用户名密码登录报莫名其妙的错</h3><p>原因是 GitHub 现在只支持 <strong>token 登录</strong>或 <strong>SSH 方式</strong>推送。解决办法：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 ssh 地址</span></span><br><span class="line">git remote add origin git@github.com:...</span><br><span class="line"><span class="comment"># 或者改已有远程地址</span></span><br><span class="line">git remote set-url origin git@github.com:...</span><br></pre></td></tr></table></figure>
-
-<p>先用 <code>ssh-keygen</code> 生成自己的公钥与私钥，再把公钥添加到 GitHub 账号中。</p>
-<p>那么这套 SSH 推送的认证流程是怎么实现的呢？本质上是<strong>类似数字签名的机制</strong>。</p>
-<h2 id="进程排查备忘"><a href="#进程排查备忘" class="headerlink" title="进程排查备忘"></a>进程排查备忘</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 PID 为 1234 的进程</span></span><br><span class="line">ps -p PID -o pid,ppid,user,cmd,%cpu,%mem,etime</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以进程树形式查看</span></span><br><span class="line">ps -eH | grep PID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看进程启动时间</span></span><br><span class="line">ps -p PID -o lstart,cmd</span><br></pre></td></tr></table></figure>
-
-<h2 id="顺带的思考"><a href="#顺带的思考" class="headerlink" title="顺带的思考"></a>顺带的思考</h2><p>计算机视觉工程师需要以图像信号处理为基础，我打算把线性代数（Gilbert Strang 老师的课）重新再学一遍。</p>
+          <p>我已经 25 岁了。国家有五年计划，我也应该有自己的五年计划——要在未来的五年里得到前所未有的进步。</p>
+<h2 id="回顾过去"><a href="#回顾过去" class="headerlink" title="回顾过去"></a>回顾过去</h2><ul>
+<li>20 岁到 25 岁期间，我熬过了疫情、熬过了失恋，也熬过了考研，一路走来不容易。</li>
+<li>本科时我沉浸在幻想里，从来没有走进社会、了解社会现状，也就没有真正的内生驱动力。</li>
+<li>毕业后干了两个月外卖。因为对社会缺少接触，很不适应，但强迫自己干了下来——尽管不是那么愉快。</li>
+<li>考研时没有报培训班是正确的选择，但报一个自习室可能会很好。</li>
+<li>两次考研期间，我的学习状态都不好，只有考前一个月才好好学（两年了历年数学卷子都没做完），那只是外部压力刺激出的驱动力。</li>
+<li>24 岁被某高校录取，终于松了口气，终于看见以后的路，终于不用再遭受别人的鄙视。</li>
+<li>24 岁以后自己才真正活了起来：开始学会开车，开始出省外挣钱，开始为了自己的未来而学习，并坚定了要成为有一技之长的人。</li>
+</ul>
+<h2 id="展望未来"><a href="#展望未来" class="headerlink" title="展望未来"></a>展望未来</h2><ul>
+<li>未来两年努力学习技术，积极参与各种有价值的比赛，锚定人工智能方向，力求有自己的立足之地。</li>
+<li>锻炼身体、规律起居，管好嘴、迈开腿，有强壮的体魄——不能钱没花了人没了。</li>
+</ul>
+<h2 id="目标清单"><a href="#目标清单" class="headerlink" title="目标清单"></a>目标清单</h2><ol>
+<li>今年暑假前把实验搞出来，明年之前投出去一篇。</li>
+<li>明年的蓝桥杯一定要拿到省一以上。</li>
+<li>明年的研电赛做些自己想做的东西。</li>
+<li>明年暑假争取去大厂实习。</li>
+<li>争取在毕业前成为预备党员。</li>
+<li>毕业后在广州或深圳找到理想工作。</li>
+<li>在三十岁前有 50w 存款。</li>
+</ol>
 
       
     </div>
@@ -221,7 +232,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/19/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/21/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/19/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/21/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -287,7 +298,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -296,7 +307,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

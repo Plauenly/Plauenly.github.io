@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/13/2026-08-13-MySQL-%E5%AE%9A%E6%97%B6%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%95%86%E5%AE%B6%E7%AB%AF%E6%94%B9%E9%80%A0/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/19/2026-08-19-Docker-%E4%B8%8E-nginx-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/08/13/2026-08-13-MySQL-%E5%AE%9A%E6%97%B6%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%95%86%E5%AE%B6%E7%AB%AF%E6%94%B9%E9%80%A0/" class="post-title-link" itemprop="url">MySQL 定时事件与商家端改造</a>
+            <a href="/2026/08/19/2026-08-19-Docker-%E4%B8%8E-nginx-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">Docker 与 nginx 学习笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-08-13 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-13T09:00:00+08:00">2026-08-13</time>
+              <time title="创建时间：2026-08-19 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-19T09:00:00+08:00">2026-08-19</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -191,63 +191,65 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="管理定时事件"><a href="#管理定时事件" class="headerlink" title="管理定时事件"></a>管理定时事件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看事件定义</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> EVENT 事件名称;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 永久删除该事件</span></span><br><span class="line"><span class="keyword">DROP</span> EVENT 事件名称;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 临时禁用一个事件</span></span><br><span class="line"><span class="keyword">ALTER</span> EVENT 事件名称 DISABLE;</span><br></pre></td></tr></table></figure>
+          <h2 id="Docker-学习"><a href="#Docker-学习" class="headerlink" title="Docker 学习"></a>Docker 学习</h2><h3 id="一条命令看懂-run-的各个参数"><a href="#一条命令看懂-run-的各个参数" class="headerlink" title="一条命令看懂 run 的各个参数"></a>一条命令看懂 run 的各个参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run --name some_name \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=my-secret-pw \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  -d -p 80:80 \</span><br><span class="line">  --network network1 \</span><br><span class="line">  -v ./mysql_data:/var/lib/mysql \</span><br><span class="line">  mysql:tag</span><br></pre></td></tr></table></figure>
 
-<h2 id="设计一个定时任务（event）"><a href="#设计一个定时任务（event）" class="headerlink" title="设计一个定时任务（event）"></a>设计一个定时任务（event）</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> event_scheduler <span class="operator">=</span> <span class="keyword">ON</span>;</span><br><span class="line"></span><br><span class="line">DELIMITER $$</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> EVENT clean_closed_orders</span><br><span class="line"><span class="keyword">ON</span> SCHEDULE <span class="keyword">EVERY</span> <span class="number">1</span> <span class="keyword">DAY</span> STARTS <span class="string">&#x27;2026-08-13 03:00:00&#x27;</span></span><br><span class="line">DO</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="comment">-- 删除 30 天前已关闭的订单</span></span><br><span class="line">  <span class="comment">-- （还需要判断 transaction_id 字段是否有值）</span></span><br><span class="line">  <span class="keyword">DELETE</span> <span class="keyword">FROM</span> `orders`</span><br><span class="line">  <span class="keyword">WHERE</span> status <span class="operator">=</span> <span class="number">-1</span></span><br><span class="line">    <span class="keyword">AND</span> create_at <span class="operator">&lt;</span> DATE_SUB(NOW(), <span class="type">INTERVAL</span> <span class="number">30</span> <span class="keyword">DAY</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 连接上一句的 where 条件，删除对应的订单商品</span></span><br><span class="line">  <span class="keyword">DELETE</span> <span class="keyword">FROM</span> `order_product` <span class="keyword">WHERE</span> `trade_id` <span class="operator">=</span> <span class="operator">%</span>(trade_id)s;</span><br><span class="line"><span class="keyword">END</span>$$</span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>可能有必要设置 MySQL 的内存占用上限。</p>
-</blockquote>
-<blockquote>
-<p>正式运行前需要清空数据库的 mock 数据，并将所有自增的键重置为从 1 开始。</p>
-</blockquote>
-<h2 id="加锁行为"><a href="#加锁行为" class="headerlink" title="加锁行为"></a>加锁行为</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> order_sequence <span class="keyword">WHERE</span> merchant_id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">FOR</span> UPDATE;</span><br></pre></td></tr></table></figure>
-
-<p>这个语句会对 <code>merchant_id = 1</code> 的行加锁，而<strong>不管 <code>merchant_id</code> 是不是主键或唯一键</strong>，所以可能产生锁全表的情况。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> order_sequence (merchant_id, seq_date, current_seq)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">&#x27;2026-08-03&#x27;</span>, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">ON</span> DUPLICATE KEY UPDATE current_seq <span class="operator">=</span> current_seq <span class="operator">+</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<p>这个语句会对主键或唯一键冲突的行加锁。</p>
-<p>另外：MySQL 中的 <code>UPDATE</code> 与 <code>DELETE</code> 语句会自动加<strong>排他锁</strong>。</p>
-<h2 id="商家-App-的改造需求"><a href="#商家-App-的改造需求" class="headerlink" title="商家 App 的改造需求"></a>商家 App 的改造需求</h2><ol>
-<li>所有接口都是 <code>api/shangjia</code> 前缀。</li>
-<li>原则：允许类别 category 里没有商品，但不允许商品 product 没有类别。</li>
-<li>删除类别时要提醒商家：该分类下的所有「只有一个类别」的商品都会被删除，请谨慎操作。</li>
-<li>商品需要增加一个 <code>is_drink</code> 字段（用来区分订单由不同的厨师处理）。</li>
-<li>需要提供一个可以增加商品图片的方法（仅上传一张图片，并选择是否为封面，上传图片大小限制在 10MB 以内）。</li>
-<li>需要可以把每件商品分给指定的类别，以及新增商品类别：</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>接口</th>
-<th>参数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>DELETE</td>
-<td><code>/api/shangjia/products/&#123;id&#125;/doCate</code></td>
-<td><code>&#123;&quot;category_id&quot;: XXX&#125;</code></td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/shangjia/products/&#123;id&#125;/doCate</code></td>
-<td><code>&#123;&quot;category_id&quot;: XXX&#125;</code></td>
-</tr>
-</tbody></table>
-<ol start="7">
-<li>提醒商家：每天流水在凌晨 3 点更新。</li>
-</ol>
-<h2 id="后厨-App"><a href="#后厨-App" class="headerlink" title="后厨 App"></a>后厨 App</h2><p>只有一个界面：只展示当天已经支付但没有完成的订单；点进去进入每个订单的详情页面。</p>
 <ul>
-<li>用户支付成功会触发刷新。</li>
-<li>里面有一个<strong>出餐按钮</strong>（对应 <code>/api/orders/finish</code>），点击后即可修改订单状态并提醒顾客，即提醒对应小程序的订单详情页面（这里需要用 WebSocket 接收消息）。</li>
+<li><code>--name</code>：给容器起名字（等同于用容器 ID 的功能）</li>
+<li><code>-e</code>：给定环境变量</li>
+<li><code>-d</code>：在后台运行</li>
+<li><code>-p 80:80</code>：把宿主机的 80 端口映射到容器的 80 端口</li>
+<li><code>--network network1</code>：加入子网 network1（也可用 <code>host</code> 直接用宿主机网络）</li>
+<li><code>--restart unless-stopped</code>：只要不是手动停止容器，都会自动重启</li>
+<li><code>-v</code>：把宿主机的目录与容器内的目录进行绑定</li>
 </ul>
-<h2 id="其他待办"><a href="#其他待办" class="headerlink" title="其他待办"></a>其他待办</h2><ul>
-<li>找到测试文件，运行后端的 <code>main.py</code> 并测试新增的 api，继续在这个测试文件里写测试结果。</li>
-<li>Docker Compose 会用、并成功部署到服务器上之后再用，尝试获取 <code>.env</code> 文件。</li>
-<li>要求将这两个 App 都编译出来形成 App 文件，传到 <code>github/&lt;你的仓库名&gt;</code> 仓库里面。</li>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>Dockerfile 是<strong>镜像制作的图纸</strong>，镜像是<strong>容器的模具</strong>。</li>
+<li>可以设置每个容器里的 CPU、内存、网络带宽等资源上限（cgroups）。</li>
 </ul>
+<h3 id="配置镜像源"><a href="#配置镜像源" class="headerlink" title="配置镜像源"></a>配置镜像源</h3><p>在 <code>/etc/docker/daemon.json</code> 中设置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://dockerhub.icu&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.1panel.live&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://hub.rat.dev&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>阿里云的配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://&lt;你的ID&gt;.mirror.aliyuncs.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://mirror.baidubce.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://dockerproxy.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://mirror.iscas.ac.cn&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://huecker.io&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://dockerhub.timeweb.cloud&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://noohub.ru&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启 / 停 / 创建(但不运行) / 删除(强制) 容器</span></span><br><span class="line">sudo docker start/stop/create/rm(-f) 容器名字或ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看容器内参数</span></span><br><span class="line">sudo docker inspect 容器名字或ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看容器日志，滚动查看（很有用）</span></span><br><span class="line">sudo docker logs 容器名字或ID --follow</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在容器内执行 linux 命令</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> 容器名字或ID linux命令</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入容器内，获得一个交互式命令行环境</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it 容器名字或ID /bin/sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 sql 文件导入容器的 mysql 数据库</span></span><br><span class="line"><span class="comment"># -i 表示使用宿主机的标准输入</span></span><br><span class="line">docker <span class="built_in">exec</span> -i my-mysql-container mysql -uroot -p123456 my_database &lt; /path/to/your/file.sql</span><br></pre></td></tr></table></figure>
+
+<h3 id="镜像与网络"><a href="#镜像与网络" class="headerlink" title="镜像与网络"></a>镜像与网络</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/os-release        <span class="comment"># 查看 linux 发行版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于当前目录下的 Dockerfile 构建镜像</span></span><br><span class="line">sudo docker build -t namespace/fastapi_test .</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dockerfile 里如果用了 --mount=type=cache，必须用这条命令启用缓存加速（要求 docker 18+）</span></span><br><span class="line">DOCKER_BUILDKIT=1 sudo docker build -t your-image .</span><br><span class="line"></span><br><span class="line">sudo docker network create network1</span><br><span class="line">sudo docker network list</span><br><span class="line">sudo docker network rm network1</span><br><span class="line"></span><br><span class="line">sudo -i                    <span class="comment"># 成为超级用户</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h3><p>命名卷挂载的好处是<strong>可以跨容器复用</strong>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo docker volume create mysql_data    <span class="comment"># 创建命名卷</span></span><br><span class="line">sudo docker volume inspect mysql_data   <span class="comment"># 查看命名卷实际位置，如 /var/lib/docker/volumes/ts_mysql_data/_data</span></span><br><span class="line">sudo docker volume rm / list</span><br><span class="line"></span><br><span class="line">apt install iproute2                    <span class="comment"># 安装后可以查看 ip</span></span><br><span class="line">ip addr show</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><ul>
+<li>compose 中<strong>不能使用容器名字与 ID</strong>，而是使用 <code>docker-compose.yml</code> 中配置的 service 名。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行当前目录下的 docker-compose.yaml，-d 后台运行</span></span><br><span class="line">sudo docker compose up/down/stop/start/restart -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 跟踪某个服务的日志</span></span><br><span class="line">sudo docker compose logs -f server名</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>restart</code> 只是「重启原来的容器」；<code>up</code> 是「确保服务按照 compose 配置重新创建/启动」。</p>
+</blockquote>
+<h3 id="推送到-Docker-Hub-前"><a href="#推送到-Docker-Hub-前" class="headerlink" title="推送到 Docker Hub 前"></a>推送到 Docker Hub 前</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把本地镜像标记为 Docker Hub 仓库镜像</span></span><br><span class="line">docker tag my-local-image 你的用户名/仓库名:标签</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把镜像保存为 tar 文件</span></span><br><span class="line">docker save -o image.tar my-image:tag</span><br></pre></td></tr></table></figure>
+
+<h2 id="nginx-学习"><a href="#nginx-学习" class="headerlink" title="nginx 学习"></a>nginx 学习</h2><p>HTTP 协议默认端口是 80，所以不输入端口号就默认访问 80 端口。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx -t          <span class="comment"># 检查配置，并定位 nginx 配置文件所在的目录</span></span><br><span class="line">nginx -V          <span class="comment"># 查看 nginx 的安装目录（从 --prefix 看）</span></span><br><span class="line">nginx -s reload   <span class="comment"># 重新加载，让修改过的配置文件生效</span></span><br><span class="line">ps -ef | grep XXX <span class="comment"># 查看进程情况</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>nginx 配置文件的 <code>server</code> 块里连接的<strong>文件根目录</strong>，就在配置文件所在的目录。</p>
+</blockquote>
+<p>执行 <code>docker exec nginx nginx -s reload</code> 时：如果新的 <code>nginx.conf</code> 有语法错误，reload 会失败，但旧的 worker 会继续用老配置运行——服务不会挂，但你改的东西没生效。</p>
+<h3 id="反向代理与负载均衡"><a href="#反向代理与负载均衡" class="headerlink" title="反向代理与负载均衡"></a>反向代理与负载均衡</h3><ol>
+<li>在监听 80 的 server 里写入：</li>
+</ol>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> /api &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://backs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>并在外面配置这个 <code>backs</code>：</li>
+</ol>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">upstream</span> backs &#123;</span><br><span class="line">    ip_hash;                  <span class="comment"># 确保同一个 ip 分配到同一个服务器上</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">127.0.0.1:8000</span> weight=<span class="number">3</span>;   <span class="comment"># 更多访问这个有权重的服务器</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">172.83.5.6:8000</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">upstream</span> fastapi &#123;</span><br><span class="line">        <span class="attribute">server</span> fastapi:<span class="number">8080</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://fastapi;</span><br><span class="line"></span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host $host;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP $remote_addr;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="凭据备忘"><a href="#凭据备忘" class="headerlink" title="凭据备忘"></a>凭据备忘</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker token: &lt;你的 Docker 访问令牌&gt;</span><br><span class="line">image_id: &lt;已移除&gt;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -266,7 +268,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -332,7 +334,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -341,7 +343,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

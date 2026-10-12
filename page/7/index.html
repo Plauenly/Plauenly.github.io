@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/19/2026-08-19-Docker-%E4%B8%8E-nginx-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/23/2026-08-23-%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E3%80%81httpx-%E5%B0%81%E8%A3%85%E4%B8%8E%E5%BC%82%E5%B8%B8%E4%BC%A0%E6%92%AD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/08/19/2026-08-19-Docker-%E4%B8%8E-nginx-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">Docker 与 nginx 学习笔记</a>
+            <a href="/2026/08/23/2026-08-23-%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E3%80%81httpx-%E5%B0%81%E8%A3%85%E4%B8%8E%E5%BC%82%E5%B8%B8%E4%BC%A0%E6%92%AD/" class="post-title-link" itemprop="url">容器日志、httpx 封装与异常传播</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-08-19 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-19T09:00:00+08:00">2026-08-19</time>
+              <time title="创建时间：2026-08-23 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-23T09:00:00+08:00">2026-08-23</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -191,64 +191,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Docker-学习"><a href="#Docker-学习" class="headerlink" title="Docker 学习"></a>Docker 学习</h2><h3 id="一条命令看懂-run-的各个参数"><a href="#一条命令看懂-run-的各个参数" class="headerlink" title="一条命令看懂 run 的各个参数"></a>一条命令看懂 run 的各个参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run --name some_name \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=my-secret-pw \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  -d -p 80:80 \</span><br><span class="line">  --network network1 \</span><br><span class="line">  -v ./mysql_data:/var/lib/mysql \</span><br><span class="line">  mysql:tag</span><br></pre></td></tr></table></figure>
+          <h2 id="查看容器日志位置"><a href="#查看容器日志位置" class="headerlink" title="查看容器日志位置"></a>查看容器日志位置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect --format=<span class="string">&#x27;&#123;&#123;.LogPath&#125;&#125;&#x27;</span> &lt;容器名或ID&gt;</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li><code>--name</code>：给容器起名字（等同于用容器 ID 的功能）</li>
-<li><code>-e</code>：给定环境变量</li>
-<li><code>-d</code>：在后台运行</li>
-<li><code>-p 80:80</code>：把宿主机的 80 端口映射到容器的 80 端口</li>
-<li><code>--network network1</code>：加入子网 network1（也可用 <code>host</code> 直接用宿主机网络）</li>
-<li><code>--restart unless-stopped</code>：只要不是手动停止容器，都会自动重启</li>
-<li><code>-v</code>：把宿主机的目录与容器内的目录进行绑定</li>
-</ul>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
-<li>Dockerfile 是<strong>镜像制作的图纸</strong>，镜像是<strong>容器的模具</strong>。</li>
-<li>可以设置每个容器里的 CPU、内存、网络带宽等资源上限（cgroups）。</li>
-</ul>
-<h3 id="配置镜像源"><a href="#配置镜像源" class="headerlink" title="配置镜像源"></a>配置镜像源</h3><p>在 <code>/etc/docker/daemon.json</code> 中设置：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://dockerhub.icu&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.1panel.live&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://hub.rat.dev&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>阿里云的配置：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://&lt;你的ID&gt;.mirror.aliyuncs.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://mirror.baidubce.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://dockerproxy.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://mirror.iscas.ac.cn&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://huecker.io&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://dockerhub.timeweb.cloud&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://noohub.ru&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启 / 停 / 创建(但不运行) / 删除(强制) 容器</span></span><br><span class="line">sudo docker start/stop/create/rm(-f) 容器名字或ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看容器内参数</span></span><br><span class="line">sudo docker inspect 容器名字或ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看容器日志，滚动查看（很有用）</span></span><br><span class="line">sudo docker logs 容器名字或ID --follow</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在容器内执行 linux 命令</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> 容器名字或ID linux命令</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入容器内，获得一个交互式命令行环境</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it 容器名字或ID /bin/sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 sql 文件导入容器的 mysql 数据库</span></span><br><span class="line"><span class="comment"># -i 表示使用宿主机的标准输入</span></span><br><span class="line">docker <span class="built_in">exec</span> -i my-mysql-container mysql -uroot -p123456 my_database &lt; /path/to/your/file.sql</span><br></pre></td></tr></table></figure>
-
-<h3 id="镜像与网络"><a href="#镜像与网络" class="headerlink" title="镜像与网络"></a>镜像与网络</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/os-release        <span class="comment"># 查看 linux 发行版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于当前目录下的 Dockerfile 构建镜像</span></span><br><span class="line">sudo docker build -t namespace/fastapi_test .</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dockerfile 里如果用了 --mount=type=cache，必须用这条命令启用缓存加速（要求 docker 18+）</span></span><br><span class="line">DOCKER_BUILDKIT=1 sudo docker build -t your-image .</span><br><span class="line"></span><br><span class="line">sudo docker network create network1</span><br><span class="line">sudo docker network list</span><br><span class="line">sudo docker network rm network1</span><br><span class="line"></span><br><span class="line">sudo -i                    <span class="comment"># 成为超级用户</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h3><p>命名卷挂载的好处是<strong>可以跨容器复用</strong>。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo docker volume create mysql_data    <span class="comment"># 创建命名卷</span></span><br><span class="line">sudo docker volume inspect mysql_data   <span class="comment"># 查看命名卷实际位置，如 /var/lib/docker/volumes/ts_mysql_data/_data</span></span><br><span class="line">sudo docker volume rm / list</span><br><span class="line"></span><br><span class="line">apt install iproute2                    <span class="comment"># 安装后可以查看 ip</span></span><br><span class="line">ip addr show</span><br></pre></td></tr></table></figure>
-
-<h3 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><ul>
-<li>compose 中<strong>不能使用容器名字与 ID</strong>，而是使用 <code>docker-compose.yml</code> 中配置的 service 名。</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行当前目录下的 docker-compose.yaml，-d 后台运行</span></span><br><span class="line">sudo docker compose up/down/stop/start/restart -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 跟踪某个服务的日志</span></span><br><span class="line">sudo docker compose logs -f server名</span><br></pre></td></tr></table></figure>
+<p>默认在 <code>/var/lib/docker/containers/容器id</code> 下。</p>
+<h2 id="日志方案：StreamHandler-日志轮转"><a href="#日志方案：StreamHandler-日志轮转" class="headerlink" title="日志方案：StreamHandler + 日志轮转"></a>日志方案：StreamHandler + 日志轮转</h2><p>用 <code>StreamHandler</code>，然后在 <code>docker-compose.yml</code> 里配置轮转日志：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">your-service:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:latest</span></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">      <span class="attr">driver:</span> <span class="string">&quot;json-file&quot;</span>   <span class="comment"># 日志驱动：Docker 容器默认捕获 stdout/stderr，</span></span><br><span class="line">                            <span class="comment"># 然后由日志驱动决定：1.日志存哪里 2.如何格式化 3.是否发送到外部系统</span></span><br><span class="line">      <span class="attr">options:</span>              <span class="comment"># 驱动选项</span></span><br><span class="line">        <span class="attr">max-size:</span> <span class="string">&quot;10m&quot;</span>     <span class="comment"># 单个文件最大字节</span></span><br><span class="line">        <span class="attr">max-file:</span> <span class="string">&quot;3&quot;</span>       <span class="comment"># 最多保存的日志文件数</span></span><br><span class="line">        <span class="attr">compress:</span> <span class="string">&quot;true&quot;</span>    <span class="comment"># 消耗 cpu 来对轮转日志压缩与解压缩</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p><code>restart</code> 只是「重启原来的容器」；<code>up</code> 是「确保服务按照 compose 配置重新创建/启动」。</p>
+<p><code>docker logs</code> 读取的是容器的「标准输出（stdout）」和「标准错误（stderr）」流。</p>
 </blockquote>
-<h3 id="推送到-Docker-Hub-前"><a href="#推送到-Docker-Hub-前" class="headerlink" title="推送到 Docker Hub 前"></a>推送到 Docker Hub 前</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把本地镜像标记为 Docker Hub 仓库镜像</span></span><br><span class="line">docker tag my-local-image 你的用户名/仓库名:标签</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把镜像保存为 tar 文件</span></span><br><span class="line">docker save -o image.tar my-image:tag</span><br></pre></td></tr></table></figure>
-
-<h2 id="nginx-学习"><a href="#nginx-学习" class="headerlink" title="nginx 学习"></a>nginx 学习</h2><p>HTTP 协议默认端口是 80，所以不输入端口号就默认访问 80 端口。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx -t          <span class="comment"># 检查配置，并定位 nginx 配置文件所在的目录</span></span><br><span class="line">nginx -V          <span class="comment"># 查看 nginx 的安装目录（从 --prefix 看）</span></span><br><span class="line">nginx -s reload   <span class="comment"># 重新加载，让修改过的配置文件生效</span></span><br><span class="line">ps -ef | grep XXX <span class="comment"># 查看进程情况</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>nginx 配置文件的 <code>server</code> 块里连接的<strong>文件根目录</strong>，就在配置文件所在的目录。</p>
-</blockquote>
-<p>执行 <code>docker exec nginx nginx -s reload</code> 时：如果新的 <code>nginx.conf</code> 有语法错误，reload 会失败，但旧的 worker 会继续用老配置运行——服务不会挂，但你改的东西没生效。</p>
-<h3 id="反向代理与负载均衡"><a href="#反向代理与负载均衡" class="headerlink" title="反向代理与负载均衡"></a>反向代理与负载均衡</h3><ol>
-<li>在监听 80 的 server 里写入：</li>
-</ol>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> /api &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://backs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>并在外面配置这个 <code>backs</code>：</li>
-</ol>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">upstream</span> backs &#123;</span><br><span class="line">    ip_hash;                  <span class="comment"># 确保同一个 ip 分配到同一个服务器上</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">127.0.0.1:8000</span> weight=<span class="number">3</span>;   <span class="comment"># 更多访问这个有权重的服务器</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">172.83.5.6:8000</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">upstream</span> fastapi &#123;</span><br><span class="line">        <span class="attribute">server</span> fastapi:<span class="number">8080</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://fastapi;</span><br><span class="line"></span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host $host;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP $remote_addr;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="凭据备忘"><a href="#凭据备忘" class="headerlink" title="凭据备忘"></a>凭据备忘</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker token: &lt;你的 Docker 访问令牌&gt;</span><br><span class="line">image_id: &lt;已移除&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="封装-httpx-AsyncClient"><a href="#封装-httpx-AsyncClient" class="headerlink" title="封装 httpx.AsyncClient"></a>封装 httpx.AsyncClient</h2><p>目标：有重试与异常处理，有日志功能，并且为每个 IP 地址以及访问的接口进行计时。</p>
+<h2 id="raise-的作用"><a href="#raise-的作用" class="headerlink" title="raise 的作用"></a>raise 的作用</h2><p><code>raise</code> 的核心作用是「抛出异常」：中断当前函数的正常执行流程，把控制权交给<strong>上层调用栈</strong>中的异常处理器（即 <code>try...except</code> 语句块），并且逐层向上冒泡（propagation）——异常会一层层向上传递，直到找到 <code>except</code> 或者到达顶层（<code>__main__</code>）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">    ...</span><br><span class="line">except SomeError as e:</span><br><span class="line">    raise   # 继续往上抛，交给上层处理</span><br></pre></td></tr></table></figure>
 
 
       
@@ -268,7 +222,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -334,7 +288,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -343,7 +297,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

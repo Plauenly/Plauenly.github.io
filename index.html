@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/09/23/2026-09-23-tmux-%E4%B8%8E-Docker-%E5%AE%B9%E5%99%A8%E5%90%AF%E5%8A%A8/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/10/12/2026-10-12-%E7%A7%91%E7%A0%94%E7%9B%AE%E6%A0%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/09/23/2026-09-23-tmux-%E4%B8%8E-Docker-%E5%AE%B9%E5%99%A8%E5%90%AF%E5%8A%A8/" class="post-title-link" itemprop="url">tmux 与 Docker 容器启动</a>
+            <a href="/2026/10/12/2026-10-12-%E7%A7%91%E7%A0%94%E7%9B%AE%E6%A0%87/" class="post-title-link" itemprop="url">科研目标</a>
         </h2>
 
         <div class="post-meta">
@@ -169,16 +169,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2026-09-23 09:00:00" itemprop="dateCreated datePublished" datetime="2026-09-23T09:00:00+08:00">2026-09-23</time>
+              <time title="创建时间：2026-10-12 15:32:00 / 修改时间：15:41:06" itemprop="dateCreated datePublished" datetime="2026-10-12T15:32:00+08:00">2026-10-12</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-10-09 14:18:21" itemprop="dateModified" datetime="2026-10-09T14:18:21+08:00">2026-10-09</time>
-              </span>
 
           
 
@@ -191,13 +185,144 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h2><p>tmux（Terminal Multiplexer，终端复用器）是 Linux 下的一个神器，它的核心作用是<strong>给终端程序提供一个虚拟的、永不掉线的运行环境</strong>。</p>
-<h2 id="Docker-Compose-覆盖启动命令"><a href="#Docker-Compose-覆盖启动命令" class="headerlink" title="Docker Compose 覆盖启动命令"></a>Docker Compose 覆盖启动命令</h2><p><code>docker-compose.yml</code> 中的 <code>command</code> 选项用于覆盖 Docker 镜像自带的默认启动命令（比如在 Dockerfile 里写 <code>CMD [&quot;pi&quot;]</code>），相当于自定义一个启动方式。</p>
-<h2 id="容器的生死绑定-1-号进程"><a href="#容器的生死绑定-1-号进程" class="headerlink" title="容器的生死绑定 1 号进程"></a>容器的生死绑定 1 号进程</h2><p>Docker 的一个铁律：<strong>容器的生死，严格绑定于它的 1 号进程（PID 1）</strong>。</p>
-<h2 id="entrypoint-与-command-的关系"><a href="#entrypoint-与-command-的关系" class="headerlink" title="entrypoint 与 command 的关系"></a>entrypoint 与 command 的关系</h2><ul>
-<li>Dockerfile 中的 <code>ENTRYPOINT</code> 只能被 compose 文件中的 <code>entrypoint</code> 选项覆盖；</li>
-<li>而 <code>command</code> 选项只能追加到 Dockerfile 中 <code>ENTRYPOINT</code> 之后。</li>
+          <blockquote>
+<p>这是 SeViL（MixPL + TOOD）复现过程中的阶段性笔记汇总：环境、算法理解、数据加载、训练调试，以及目前卡住的问题。原文是随手记的碎片，这里按主题重新整理了一遍。</p>
+</blockquote>
+<h2 id="一、环境与依赖"><a href="#一、环境与依赖" class="headerlink" title="一、环境与依赖"></a>一、环境与依赖</h2><h3 id="Docker-ollama"><a href="#Docker-ollama" class="headerlink" title="Docker / ollama"></a>Docker / ollama</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker inspect ollama | grep <span class="string">&quot;com.docker.compose&quot;</span></span><br><span class="line"><span class="comment"># 查看完整命令（不截断）</span></span><br><span class="line">docker ps -a --no-trunc --filter <span class="string">&quot;name=ollama&quot;</span> --format <span class="string">&quot;&#123;&#123;.Command&#125;&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>启动命令（应该是 entrypoint）：<code>/bin/ollama serve</code></p>
+<h3 id="安装-PyTorch（指定缓存目录）"><a href="#安装-PyTorch（指定缓存目录）" class="headerlink" title="安装 PyTorch（指定缓存目录）"></a>安装 PyTorch（指定缓存目录）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 \</span><br><span class="line">    --index-url https://download.pytorch.org/whl/cu118 \</span><br><span class="line">    --cache-dir /mnt/disk870evo-1t-02/pip_cache</span><br></pre></td></tr></table></figure>
+
+<h3 id="在指定磁盘创建-conda-环境"><a href="#在指定磁盘创建-conda-环境" class="headerlink" title="在指定磁盘创建 conda 环境"></a>在指定磁盘创建 conda 环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -p /mnt/disk870evo-1t-02/ly/conda_envs/my_new_env python=3.10</span><br></pre></td></tr></table></figure>
+
+<h3 id="用-TMPDIR-指定临时目录后安装-CLIP"><a href="#用-TMPDIR-指定临时目录后安装-CLIP" class="headerlink" title="用 TMPDIR 指定临时目录后安装 CLIP"></a>用 TMPDIR 指定临时目录后安装 CLIP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /mnt/disk870evo-1t-02/tmp &amp;&amp; sudo chmod 777 /mnt/disk870evo-1t-02/tmp</span><br><span class="line">TMPDIR=/mnt/disk870evo-1t-02/tmp pip install git+ssh://git@github.com/openai/CLIP.git</span><br></pre></td></tr></table></figure>
+
+<p>目前服务器上我的所有 conda 环境都安装了 clip。</p>
+<h3 id="检查环境依赖"><a href="#检查环境依赖" class="headerlink" title="检查环境依赖"></a>检查环境依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PYTHONPATH=<span class="variable">$PWD</span>:<span class="variable">$PWD</span>/CLIP python -c <span class="string">&quot;</span></span><br><span class="line"><span class="string">import importlib</span></span><br><span class="line"><span class="string">for m in [&#x27;clip&#x27;,&#x27;sklearn&#x27;,&#x27;scipy&#x27;,&#x27;numpy&#x27;,&#x27;pycocotools&#x27;,&#x27;terminaltables&#x27;,&#x27;tqdm&#x27;,&#x27;matplotlib&#x27;]:</span></span><br><span class="line"><span class="string">    try:</span></span><br><span class="line"><span class="string">        importlib.import_module(m); print(&#x27;OK  &#x27;, m)</span></span><br><span class="line"><span class="string">    except Exception as e:</span></span><br><span class="line"><span class="string">        print(&#x27;MISS&#x27;, m, &#x27;-&gt;&#x27;, e)</span></span><br><span class="line"><span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二、算法理解"><a href="#二、算法理解" class="headerlink" title="二、算法理解"></a>二、算法理解</h2><h3 id="TOOD（Task-aligned-One-stage-Object-Detection）"><a href="#TOOD（Task-aligned-One-stage-Object-Detection）" class="headerlink" title="TOOD（Task-aligned One-stage Object Detection）"></a>TOOD（Task-aligned One-stage Object Detection）</h3><p>专门用于单阶段目标检测的具体算法。核心思想是解决单阶段检测器里一个经典问题：<strong>分类任务和定位任务的不对齐</strong>。</p>
+<h3 id="SeViL-的-TATE-阶段"><a href="#SeViL-的-TATE-阶段" class="headerlink" title="SeViL 的 TATE 阶段"></a>SeViL 的 TATE 阶段</h3><p>在 TATE（Text-guided Adaptive Target Enhancing）阶段我有些疑问：获得注意力权重 G 并作用到 motion features M 以后，源代码是怎么做的（即下一步检测头是怎么做的）？</p>
+<p>答案：<strong>直接把增强后的特征当作普通的 FPN 特征来用</strong>。</p>
+<h3 id="GMM（Gaussian-Mixture-Model）"><a href="#GMM（Gaussian-Mixture-Model）" class="headerlink" title="GMM（Gaussian Mixture Model）"></a>GMM（Gaussian Mixture Model）</h3><p>源代码如何实现？核心是使用现成的 <code>sklearn.mixture.GaussianMixture</code>。</p>
+<ul>
+<li>流程：在每个 batch 中去统计，获得一个阈值，过滤出所有高于阈值的用于学生模型的训练。</li>
+<li>原理：初始化两个得分最高的与得分最低的，去用算法演化，默认阈值取正样本中的峰值。</li>
 </ul>
+<h3 id="Mask-与恢复"><a href="#Mask-与恢复" class="headerlink" title="Mask 与恢复"></a>Mask 与恢复</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文本 prompt</td>
+<td>15% 的向量置 0</td>
+</tr>
+<tr>
+<td>图像特征</td>
+<td>2×2 块，25% 置 0</td>
+</tr>
+</tbody></table>
+<p>恢复方式：<code>RecoverText</code> 使用交叉注意力，<code>RecoverImage</code> 拼接 + 两层卷积。</p>
+<h2 id="三、数据加载与增强"><a href="#三、数据加载与增强" class="headerlink" title="三、数据加载与增强"></a>三、数据加载与增强</h2><h3 id="数据与配置"><a href="#数据与配置" class="headerlink" title="数据与配置"></a>数据与配置</h3><ul>
+<li>SeVil 数据集用的是 DAUB，放在 <code>/home/public/DAUB/</code>。</li>
+<li>SeVil 的代码关于如何加载多帧图片、如何对多帧图片做预处理的方法都是缺失的（只缺 <code>RandomResize</code> 和 <code>LoadImagesFrom</code> 两个函数）。打算先让 AI 补齐这些代码，如果作者给了源代码再另说。</li>
+<li>现在数据加载与配置打印都测试通过，可以开始 debug 了。</li>
+</ul>
+<h3 id="新的认识：1-9-mask-与三路增强"><a href="#新的认识：1-9-mask-与三路增强" class="headerlink" title="新的认识：1:9 mask 与三路增强"></a>新的认识：1:9 mask 与三路增强</h3><p>在 dataset 阶段，原始数据的位置标注信息被故意按 <strong>1:9</strong> mask 了：</p>
+<ul>
+<li>拿 1 个 labeled 作为有监督，另外 3 个 unlabeled 作为无监督；</li>
+<li>每个以它为结尾抽取最相邻的 4 帧一起（因为最终使用的是融合后的最后那帧）作为输入样本；</li>
+<li>并根据「是否进入学生模型」与「是否有监督」做相应的增强；</li>
+<li>一个样本的 5 帧共享同一套增强参数，保证了几何/颜色增强在帧间是一致的。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>分支</th>
+<th>增强策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sup</code></td>
+<td>RandomResize + RandAugment（颜色空间，aug_num=1）</td>
+</tr>
+<tr>
+<td><code>unsup_teacher</code></td>
+<td>只有 RandomResize</td>
+</tr>
+<tr>
+<td><code>unsup_student</code></td>
+<td>RandomResize + RandomOrder（RandAugment 颜色，RandAugment 几何）</td>
+</tr>
+</tbody></table>
+<p>可视化检查多帧：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python tools/analysis_tools/check_multiframe.py --data-root /mnt/disk870evo-1t-02/ly/datasets/DAUB/ \</span><br><span class="line">    --start-mode right --out-dir ./tmpvis_right --num-samples 5</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、训练与调试要点"><a href="#四、训练与调试要点" class="headerlink" title="四、训练与调试要点"></a>四、训练与调试要点</h2><h3 id="iter-与-epoch"><a href="#iter-与-epoch" class="headerlink" title="iter 与 epoch"></a>iter 与 epoch</h3><ul>
+<li><code>1 个 iter = 1 次前向 + 反向（1 个 batch）</code></li>
+<li><code>1 个 epoch = 完整遍历一遍训练集</code></li>
+<li>对于大数据集 / 长训练，通常按 iter 级别而不是 epoch 级别来训练，因为改数据集大小不影响总训练量。</li>
+</ul>
+<h3 id="训练命令"><a href="#训练命令" class="headerlink" title="训练命令"></a>训练命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MIXPL_DEBUG=1 CUDA_VISIBLE_DEVICES=3 PYTHONPATH=. \</span><br><span class="line">  /mnt/disk870evo-1t-02/ly/conda_envs/SeVil/bin/python \</span><br><span class="line">  /mnt/disk870evo-1t-02/ly/project/SeViL/tools/train.py</span><br></pre></td></tr></table></figure>
+
+<p>带 resume 和 cfg-options、并只看 debug 输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MIXPL_DEBUG=1 CUDA_VISIBLE_DEVICES=3 PYTHONPATH=. \</span><br><span class="line">  /mnt/disk870evo-1t-02/ly/conda_envs/SeVil/bin/python \</span><br><span class="line">  /mnt/disk870evo-1t-02/ly/project/SeViL/tools/train.py --resume \</span><br><span class="line">  --cfg-options model.detector.bbox_head.test_cfg.score_thr=0.001 2&gt;&amp;1 | grep MIXPL-DBG | head -20</span><br></pre></td></tr></table></figure>
+
+<h3 id="python-xxx-py-与-python-m-xxx"><a href="#python-xxx-py-与-python-m-xxx" class="headerlink" title="python xxx.py 与 python -m xxx"></a><code>python xxx.py</code> 与 <code>python -m xxx</code></h3><table>
+<thead>
+<tr>
+<th>方式</th>
+<th><code>sys.path[0]</code> 是什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>python mymod.py</code></td>
+<td>脚本所在目录</td>
+</tr>
+<tr>
+<td><code>python -m mymod</code></td>
+<td>当前工作目录</td>
+</tr>
+</tbody></table>
+<p>这意味着 <code>python -m</code> 会把当前目录加入模块搜索路径。</p>
+<h3 id="比较重要的数据结构"><a href="#比较重要的数据结构" class="headerlink" title="比较重要的数据结构"></a>比较重要的数据结构</h3><p><code>batch_size=4, source_ratio=[1,3]</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">multi_batch_inputs[<span class="string">&#x27;sup&#x27;</span>]                 <span class="comment"># (1, 5, 3, 512, 512)</span></span><br><span class="line">multi_batch_inputs[<span class="string">&#x27;unsup_teacher&#x27;</span>]       <span class="comment"># (3, 5, 3, 512, 512)</span></span><br><span class="line">multi_batch_inputs[<span class="string">&#x27;unsup_student&#x27;</span>]       <span class="comment"># (3, 5, 3, 512, 512)</span></span><br><span class="line">multi_batch_data_samples[<span class="string">&#x27;sup&#x27;</span>]           <span class="comment"># [DetDataSample] × 1</span></span><br><span class="line">multi_batch_data_samples[<span class="string">&#x27;unsup_teacher&#x27;</span>] <span class="comment"># [DetDataSample] × 3</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">DetDataSample(</span><br><span class="line">    <span class="comment"># metainfo（元信息）：标量/元组/str，不参与梯度，不进 GPU</span></span><br><span class="line">    metainfo = &#123;</span><br><span class="line">        <span class="string">&#x27;img_id&#x27;</span>: <span class="number">123</span>, <span class="string">&#x27;img_path&#x27;</span>: <span class="string">&#x27;images/train/data5/3.bmp&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;ori_shape&#x27;</span>: (<span class="number">512</span>, <span class="number">512</span>), <span class="string">&#x27;img_shape&#x27;</span>: (<span class="number">512</span>, <span class="number">512</span>),</span><br><span class="line">        <span class="string">&#x27;scale_factor&#x27;</span>: (<span class="number">1.0</span>, <span class="number">1.0</span>),      <span class="comment"># 或 (0.5, 0.5)</span></span><br><span class="line">        <span class="string">&#x27;pad_shape&#x27;</span>: (<span class="number">512</span>, <span class="number">512</span>), <span class="string">&#x27;batch_input_shape&#x27;</span>: (<span class="number">512</span>, <span class="number">512</span>),</span><br><span class="line">        <span class="string">&#x27;flip&#x27;</span>: <span class="literal">False</span>, <span class="string">&#x27;flip_direction&#x27;</span>: <span class="literal">None</span>,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment"># data fields（真正的数据）：Tensor / InstanceData / PixelData</span></span><br><span class="line">    gt_instances      = InstanceData(bboxes=(n, <span class="number">4</span>) float32,</span><br><span class="line">                                     labels=(n,) int64,</span><br><span class="line">                                     scores=(n,),   <span class="comment"># 教师伪标签才有</span></span><br><span class="line">                                     simi=(n,)),    <span class="comment"># ← SeViL 自己加的（TAPF 的 CI）</span></span><br><span class="line">    ignored_instances = InstanceData(bboxes=(m, <span class="number">4</span>), labels=(m,)),</span><br><span class="line">    proposals         = InstanceData(...),   <span class="comment"># 两阶段检测器才用</span></span><br><span class="line">    pred_instances    = InstanceData(...),   <span class="comment"># 推理时才有</span></span><br><span class="line">    gt_sem_seg        = PixelData(sem_seg=(<span class="number">1</span>, H, W)),</span><br><span class="line">    pred_sem_seg      = PixelData(...),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、目前的问题"><a href="#五、目前的问题" class="headerlink" title="五、目前的问题"></a>五、目前的问题</h2><h3 id="1-第一阶段结束后训练精度强烈震荡"><a href="#1-第一阶段结束后训练精度强烈震荡" class="headerlink" title="1. 第一阶段结束后训练精度强烈震荡"></a>1. 第一阶段结束后训练精度强烈震荡</h3><p>在第一阶段刚结束后，有大量（523 张）的困难样本被判别为容易样本涌入到容易样本训练池中，导致训练精度出现强烈震荡：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">当前 epoch:85  train_mioU:0.7048  train_nioU:0.4744</span><br><span class="line"> -&gt; 当前 epoch:87  train_mioU:0.4542  train_nioU:0.4233</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">epoch:321  no_choose 剩余:0  choose 当前:1676（在 321 epoch 时，所有困难样本全部进入了）</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-unsup-loss-cls-unsup-loss-bbox-一直为-0-0"><a href="#2-unsup-loss-cls-unsup-loss-bbox-一直为-0-0" class="headerlink" title="2. unsup_loss_cls / unsup_loss_bbox 一直为 0.0"></a>2. <code>unsup_loss_cls</code> / <code>unsup_loss_bbox</code> 一直为 0.0</h3><p>训练了 1600 iters，为什么一直都是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;unsup_loss_cls&quot;: 0.0, &quot;unsup_loss_bbox&quot;: 0.0</span><br></pre></td></tr></table></figure>
+
+<p>这两个损失是通过 MixPL 中的 <code>loss_by_pseudo_instances</code> 函数计算的。另外注意：论文中的 crop 就是将预测出的 bbox 的区域裁剪出来。</p>
+<h3 id="3-similarity-未必可靠"><a href="#3-similarity-未必可靠" class="headerlink" title="3. similarity 未必可靠"></a>3. similarity 未必可靠</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(keyframe.shape[<span class="number">0</span>]):</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(score_list) != <span class="number">0</span>:</span><br><span class="line">        score_list = torch.cat(score_list, dim=<span class="number">0</span>)</span><br><span class="line">        batch_data_samples[i].gt_instances.simi = score_list</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        batch_data_samples[i].gt_instances.simi = torch.tensor([]).to(self.data_preprocessor.device)</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是：这份代码把 ImageNet 归一化过的、pad 过的 keyframe crop 直接喂进 <code>encode_image()</code>（<code>mixpl.py:159</code> 附近），和 CLIP 自己的 <code>preprocess</code>（Resize 224 + CLIP 自己的 mean/std）不一致——所以算出来的 similarity 未必可靠。</p>
+<h3 id="4-其他待确认"><a href="#4-其他待确认" class="headerlink" title="4. 其他待确认"></a>4. 其他待确认</h3><ul>
+<li>损失到底是怎么计算的、对应于代码的哪里？目前已知 <code>rec_loss</code> 是 <code>recover_txt_loss + recover_img_loss</code> 的综合。</li>
+<li>mmengine 中的 config 涉及到的深合并是种什么规则？如何打印展开后的最终配置？</li>
+</ul>
+<h2 id="六、MIXPL-DBG-日志"><a href="#六、MIXPL-DBG-日志" class="headerlink" title="六、MIXPL-DBG 日志"></a>六、MIXPL-DBG 日志</h2><p>刚恢复训练时，teacher 的原始输出其实是有框的，但经过 <code>cls_pseudo_thr=0.4</code> 和 CI 阈值 0.3 的双重过滤后全部被清空，最终每张图只有 0 个伪标签：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[MIXPL-DBG] 1.teacher_raw boxes=[16, 25, 14] max_score=[0.3168, 0.3524, 0.3825]</span><br><span class="line">[MIXPL-DBG] 2.after cls_pseudo_thr=0.4 boxes=[0, 0, 0]</span><br><span class="line">[MIXPL-DBG] 3.CI n=0 min=None max=None thr=0.3</span><br><span class="line">[MIXPL-DBG] 4.after simi_filter boxes=[0, 0, 0]</span><br><span class="line">[MIXPL-DBG] 5.pseudo_per_sample=[0, 0, 0] mode=min num=0 least_num=1</span><br></pre></td></tr></table></figure>
+
+<p>唯一一次有框通过的样本，也卡在了 CI 上（<code>min=0.281 &lt; thr=0.3</code>）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[MIXPL-DBG] 1.teacher_raw boxes=[15, 28, 34] max_score=[0.3111, 0.188, 0.4029]</span><br><span class="line">[MIXPL-DBG] 2.after cls_pseudo_thr=0.4 boxes=[0, 0, 1]</span><br><span class="line">[MIXPL-DBG] 3.CI n=1 min=0.281 max=0.281 thr=0.3</span><br><span class="line">[MIXPL-DBG] 4.after simi_filter boxes=[0, 0, 0]</span><br><span class="line">[MIXPL-DBG] 5.pseudo_per_sample=[0, 0, 0] mode=min num=0 least_num=1</span><br></pre></td></tr></table></figure>
+
+<p>这些日志和上面「<code>unsup_loss</code> 恒为 0」是同一个根因的方向：<strong>伪标签在进入学生模型之前就被过滤光了</strong>。</p>
+<h3 id="附：恢复训练的日志"><a href="#附：恢复训练的日志" class="headerlink" title="附：恢复训练的日志"></a>附：恢复训练的日志</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">10/12 15:32:16 - mmengine - INFO - load model from: torchvision://resnet50</span><br><span class="line">10/12 15:32:16 - mmengine - INFO - Loads checkpoint by torchvision backend from path: torchvision://resnet50</span><br><span class="line">10/12 15:32:16 - mmengine - WARNING - The model and loaded state dict do not match exactly</span><br><span class="line">unexpected key in source state_dict: fc.weight, fc.bias</span><br><span class="line"></span><br><span class="line">10/12 15:32:17 - mmengine - INFO - Loads checkpoint by torchvision backend from path: torchvision://resnet50</span><br><span class="line">10/12 15:32:17 - mmengine - INFO - Auto resumed from the latest checkpoint /mnt/disk870evo-1t-02/ly/project/SeViL/work_dir/mixpl_tood_daub/iter_1500.pth.</span><br><span class="line">10/12 15:32:19 - mmengine - INFO - Load checkpoint from /mnt/disk870evo-1t-02/ly/project/SeViL/work_dir/mixpl_tood_daub/iter_1500.pth</span><br><span class="line">10/12 15:32:19 - mmengine - INFO - resumed epoch: 0, iter: 1500</span><br><span class="line">10/12 15:32:19 - mmengine - INFO - Checkpoints will be saved to /mnt/disk870evo-1t-02/ly/project/SeViL/work_dir/mixpl_tood_daub.</span><br><span class="line">10/12 15:32:19 - mmengine - WARNING - Advance dataloader 1500 steps to skip data that has already been trained</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、下一步"><a href="#七、下一步" class="headerlink" title="七、下一步"></a>七、下一步</h2><ol>
+<li>搞清楚伪标签被全部过滤的原因（阈值配置？CI 计算不对？），让 <code>unsup_loss_cls</code> / <code>unsup_loss_bbox</code> 真正动起来。</li>
+<li>修正 similarity 计算：喂给 <code>encode_image()</code> 的 crop 要走 CLIP 自己的 <code>preprocess</code>。</li>
+<li>复查第一阶段样本池切换的逻辑，解决精度震荡。</li>
+<li>补齐/确认多帧加载与预处理函数。</li>
+</ol>
 
       
     </div>
@@ -216,7 +341,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -282,7 +407,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -291,7 +416,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

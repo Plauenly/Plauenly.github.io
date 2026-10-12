@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/09/2026-08-09-Base64%E3%80%81%E7%AD%BE%E5%90%8D%E4%B8%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E7%AD%BE%E5%90%8D%E4%B8%B2/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/08/13/2026-08-13-MySQL-%E5%AE%9A%E6%97%B6%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%95%86%E5%AE%B6%E7%AB%AF%E6%94%B9%E9%80%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/08/09/2026-08-09-Base64%E3%80%81%E7%AD%BE%E5%90%8D%E4%B8%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E7%AD%BE%E5%90%8D%E4%B8%B2/" class="post-title-link" itemprop="url">Base64、签名与微信支付签名串</a>
+            <a href="/2026/08/13/2026-08-13-MySQL-%E5%AE%9A%E6%97%B6%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%95%86%E5%AE%B6%E7%AB%AF%E6%94%B9%E9%80%A0/" class="post-title-link" itemprop="url">MySQL 定时事件与商家端改造</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-08-09 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-09T09:00:00+08:00">2026-08-09</time>
+              <time title="创建时间：2026-08-13 09:00:00" itemprop="dateCreated datePublished" datetime="2026-08-13T09:00:00+08:00">2026-08-13</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -191,19 +191,62 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="为什么需要-Base64"><a href="#为什么需要-Base64" class="headerlink" title="为什么需要 Base64"></a>为什么需要 Base64</h2><p>ASCII 只能表示 0–127 字节范围的字符，而一个字节是 8 bit，表示范围是 0–255。</p>
-<p><code>b64encode()</code> 可以把任意二进制（尤其是从签名函数得到的）转换为可打印字符：具体地，Base64 把原来 8 bit 表示一个字符的方式转化为 6 bit 一组（不够的补 0），这样就能被 ASCII 码表示——而 ASCII 编码又是 UTF-8 编码的子集。</p>
-<h2 id="签名的两个作用"><a href="#签名的两个作用" class="headerlink" title="签名的两个作用"></a>签名的两个作用</h2><p>验证签名的时候，除了可以证明<strong>确实是用私钥加密的</strong>以外，还能证明<strong>被签名的内容没有被修改过</strong>。</p>
-<h2 id="Python-中的字符串编码"><a href="#Python-中的字符串编码" class="headerlink" title="Python 中的字符串编码"></a>Python 中的字符串编码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="string">b&#x27;好的abc&#x27;</span>          <span class="comment"># 报错：默认用 ascii 编码为字节流</span></span><br><span class="line">a = <span class="string">&#x27;好的abc&#x27;</span>.encode(<span class="string">&quot;utf-8&quot;</span>)   <span class="comment"># 以 utf-8 的方式存储该字符串对应的字节流</span></span><br></pre></td></tr></table></figure>
+          <h2 id="管理定时事件"><a href="#管理定时事件" class="headerlink" title="管理定时事件"></a>管理定时事件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看事件定义</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> EVENT 事件名称;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 永久删除该事件</span></span><br><span class="line"><span class="keyword">DROP</span> EVENT 事件名称;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 临时禁用一个事件</span></span><br><span class="line"><span class="keyword">ALTER</span> EVENT 事件名称 DISABLE;</span><br></pre></td></tr></table></figure>
 
-<h2 id="获取接口调用凭证"><a href="#获取接口调用凭证" class="headerlink" title="获取接口调用凭证"></a>获取接口调用凭证</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;grant_type&quot;</span>: <span class="string">&quot;client_credential&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;appid&quot;</span>: <span class="string">&quot;&lt;你的 AppID&gt;&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;secret&quot;</span>: <span class="string">&quot;&lt;你的 AppSecret&gt;&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="设计一个定时任务（event）"><a href="#设计一个定时任务（event）" class="headerlink" title="设计一个定时任务（event）"></a>设计一个定时任务（event）</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> event_scheduler <span class="operator">=</span> <span class="keyword">ON</span>;</span><br><span class="line"></span><br><span class="line">DELIMITER $$</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> EVENT clean_closed_orders</span><br><span class="line"><span class="keyword">ON</span> SCHEDULE <span class="keyword">EVERY</span> <span class="number">1</span> <span class="keyword">DAY</span> STARTS <span class="string">&#x27;2026-08-13 03:00:00&#x27;</span></span><br><span class="line">DO</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="comment">-- 删除 30 天前已关闭的订单</span></span><br><span class="line">  <span class="comment">-- （还需要判断 transaction_id 字段是否有值）</span></span><br><span class="line">  <span class="keyword">DELETE</span> <span class="keyword">FROM</span> `orders`</span><br><span class="line">  <span class="keyword">WHERE</span> status <span class="operator">=</span> <span class="number">-1</span></span><br><span class="line">    <span class="keyword">AND</span> create_at <span class="operator">&lt;</span> DATE_SUB(NOW(), <span class="type">INTERVAL</span> <span class="number">30</span> <span class="keyword">DAY</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 连接上一句的 where 条件，删除对应的订单商品</span></span><br><span class="line">  <span class="keyword">DELETE</span> <span class="keyword">FROM</span> `order_product` <span class="keyword">WHERE</span> `trade_id` <span class="operator">=</span> <span class="operator">%</span>(trade_id)s;</span><br><span class="line"><span class="keyword">END</span>$$</span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
 
-<h2 id="优雅停机"><a href="#优雅停机" class="headerlink" title="优雅停机"></a>优雅停机</h2><p>如何做到给后台程序停止信号后，不再让它接受新的业务，并且等它处理完当前最后一个业务后才彻底停止？</p>
-<h2 id="数据库连接的两条铁律"><a href="#数据库连接的两条铁律" class="headerlink" title="数据库连接的两条铁律"></a>数据库连接的两条铁律</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">with</span> pool.acquire() <span class="keyword">as</span> conn:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可能有必要设置 MySQL 的内存占用上限。</p>
+</blockquote>
+<blockquote>
+<p>正式运行前需要清空数据库的 mock 数据，并将所有自增的键重置为从 1 开始。</p>
+</blockquote>
+<h2 id="加锁行为"><a href="#加锁行为" class="headerlink" title="加锁行为"></a>加锁行为</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> order_sequence <span class="keyword">WHERE</span> merchant_id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">FOR</span> UPDATE;</span><br></pre></td></tr></table></figure>
 
+<p>这个语句会对 <code>merchant_id = 1</code> 的行加锁，而<strong>不管 <code>merchant_id</code> 是不是主键或唯一键</strong>，所以可能产生锁全表的情况。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> order_sequence (merchant_id, seq_date, current_seq)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">&#x27;2026-08-03&#x27;</span>, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">ON</span> DUPLICATE KEY UPDATE current_seq <span class="operator">=</span> current_seq <span class="operator">+</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这个语句会对主键或唯一键冲突的行加锁。</p>
+<p>另外：MySQL 中的 <code>UPDATE</code> 与 <code>DELETE</code> 语句会自动加<strong>排他锁</strong>。</p>
+<h2 id="商家-App-的改造需求"><a href="#商家-App-的改造需求" class="headerlink" title="商家 App 的改造需求"></a>商家 App 的改造需求</h2><ol>
+<li>所有接口都是 <code>api/shangjia</code> 前缀。</li>
+<li>原则：允许类别 category 里没有商品，但不允许商品 product 没有类别。</li>
+<li>删除类别时要提醒商家：该分类下的所有「只有一个类别」的商品都会被删除，请谨慎操作。</li>
+<li>商品需要增加一个 <code>is_drink</code> 字段（用来区分订单由不同的厨师处理）。</li>
+<li>需要提供一个可以增加商品图片的方法（仅上传一张图片，并选择是否为封面，上传图片大小限制在 10MB 以内）。</li>
+<li>需要可以把每件商品分给指定的类别，以及新增商品类别：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>接口</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DELETE</td>
+<td><code>/api/shangjia/products/&#123;id&#125;/doCate</code></td>
+<td><code>&#123;&quot;category_id&quot;: XXX&#125;</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/shangjia/products/&#123;id&#125;/doCate</code></td>
+<td><code>&#123;&quot;category_id&quot;: XXX&#125;</code></td>
+</tr>
+</tbody></table>
+<ol start="7">
+<li>提醒商家：每天流水在凌晨 3 点更新。</li>
+</ol>
+<h2 id="后厨-App"><a href="#后厨-App" class="headerlink" title="后厨 App"></a>后厨 App</h2><p>只有一个界面：只展示当天已经支付但没有完成的订单；点进去进入每个订单的详情页面。</p>
 <ul>
-<li>要么 <code>commit</code>，要么 <code>rollback</code>，不能什么也不做，也不能既 <code>commit</code> 又 <code>rollback</code>。</li>
-<li><code>finally</code> 里的语句块，无论 try 成功还是 except 失败都会执行。</li>
+<li>用户支付成功会触发刷新。</li>
+<li>里面有一个<strong>出餐按钮</strong>（对应 <code>/api/orders/finish</code>），点击后即可修改订单状态并提醒顾客，即提醒对应小程序的订单详情页面（这里需要用 WebSocket 接收消息）。</li>
+</ul>
+<h2 id="其他待办"><a href="#其他待办" class="headerlink" title="其他待办"></a>其他待办</h2><ul>
+<li>找到测试文件，运行后端的 <code>main.py</code> 并测试新增的 api，继续在这个测试文件里写测试结果。</li>
+<li>Docker Compose 会用、并成功部署到服务器上之后再用，尝试获取 <code>.env</code> 文件。</li>
+<li>要求将这两个 App 都编译出来形成 App 文件，传到 <code>github/&lt;你的仓库名&gt;</code> 仓库里面。</li>
 </ul>
 
       
@@ -223,7 +266,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -289,7 +332,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -298,7 +341,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

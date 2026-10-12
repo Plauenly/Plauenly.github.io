@@ -146,7 +146,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/07/30/2026-07-30-JWT-%E4%B8%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B/">
+    <link itemprop="mainEntityOfPage" href="http://plauenly.github.io/2026/07/31/2026-07-31-asyncio-%E4%B8%8E-FastAPI-%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/07/30/2026-07-30-JWT-%E4%B8%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">JWT 与微信支付整体流程</a>
+            <a href="/2026/07/31/2026-07-31-asyncio-%E4%B8%8E-FastAPI-%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">asyncio 与 FastAPI 并发模型</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-07-30 09:00:00" itemprop="dateCreated datePublished" datetime="2026-07-30T09:00:00+08:00">2026-07-30</time>
+              <time title="创建时间：2026-07-31 09:00:00" itemprop="dateCreated datePublished" datetime="2026-07-31T09:00:00+08:00">2026-07-31</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -191,122 +191,49 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="JWT-是什么"><a href="#JWT-是什么" class="headerlink" title="JWT 是什么"></a>JWT 是什么</h2><p>JWT（JSON Web Token）是一种紧凑的、自包含的网络身份认证令牌标准。简单说，它利用<strong>签名技术</strong>（注意：主要载荷并没有加密，只是 base64 编码）在各方之间安全地传递可验证的信息，比如用户身份。</p>
-<h2 id="登录流程"><a href="#登录流程" class="headerlink" title="登录流程"></a>登录流程</h2><ol>
-<li>前端在进入小程序时调用 <code>wx.login()</code> 获得 <code>code</code>。</li>
-<li>后端拿着 <code>code</code> 访问 <code>https://api.weixin.qq.com/sns/jscode2session</code>，获得 <code>openid</code>（永久不过期，同一小程序内不变）。</li>
-<li>把用户信息做成 JWT token 返回，小程序端一直保存着这个 token。</li>
-</ol>
-<p>JWT 里面一般保存：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;user_id&quot;</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">&quot;openid&quot;</span>: <span class="string">&quot;oX...&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;exp&quot;</span>: <span class="number">1712345678</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="支付流程"><a href="#支付流程" class="headerlink" title="支付流程"></a>支付流程</h2><ol>
-<li>后端收到支付请求后，调用 <code>https://api.mch.weixin.qq.com</code>，传入商户相关信息、支付金额以及支付者的 <code>openid</code>。</li>
-<li>成功后收到 <code>prepay_id</code>，用它和自己的商户私钥生成相应的信息包。</li>
-<li>小程序中把该信息包传入 <code>wx.requestPayment</code>，即可唤起支付页面。</li>
-<li>支付成功后，微信会以 POST 形式通知 <code>https://你的域名/pay/notify</code>。</li>
-</ol>
+          <h2 id="事件循环与-asyncio"><a href="#事件循环与-asyncio" class="headerlink" title="事件循环与 asyncio"></a>事件循环与 asyncio</h2><p><code>asyncio.run()</code> 会创建一个 event loop，把 <code>main()</code> 协程作为循环上的第一个任务运行；当 <code>main</code> 执行完毕后，自动关闭并清理该 event loop。</p>
+<h2 id="FastAPI-的并发模型"><a href="#FastAPI-的并发模型" class="headerlink" title="FastAPI 的并发模型"></a>FastAPI 的并发模型</h2><p>uvicorn 服务器会调用类似 <code>asyncio.run()</code> 的机制，启动一个长期运行的事件循环。</p>
+<ul>
+<li>在 FastAPI 中，被路由注册的异步函数都是这个 event loop 的协程函数。</li>
+<li>当某个协程因为 IO 操作阻塞时，event loop 会让它挂起，并从就绪队列中取出新的协程函数执行。</li>
+<li>FastAPI / uvicorn 的默认模式是<strong>单线程 + 协程并发</strong>：在单线程上利用 CPU 与 IO 同时执行的原理，实现函数异步执行。</li>
+</ul>
 <blockquote>
-<p>注意：微信支付官方主要支持 IPv4。</p>
+<p>注意：FastAPI 中只能有一个事件循环，也就是 uvicorn 自己创建的那个。</p>
 </blockquote>
-<h2 id="HTTP-状态码速查"><a href="#HTTP-状态码速查" class="headerlink" title="HTTP 状态码速查"></a>HTTP 状态码速查</h2><h3 id="1xx-信息响应"><a href="#1xx-信息响应" class="headerlink" title="1xx 信息响应"></a>1xx 信息响应</h3><table>
+<h2 id="读取请求体的两种方式"><a href="#读取请求体的两种方式" class="headerlink" title="读取请求体的两种方式"></a>读取请求体的两种方式</h2><p><code>await request.body()</code> 与 <code>await request.json()</code> 的核心区别：</p>
+<table>
 <thead>
 <tr>
-<th>状态码</th>
-<th>含义</th>
+<th>写法</th>
+<th>返回值</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>100 Continue</td>
-<td>服务器已收到请求的一部分，客户端可以继续发送其余部分。</td>
+<td><code>await request.body()</code></td>
+<td>原始字节数据</td>
 </tr>
 <tr>
-<td>101 Switching Protocols</td>
-<td>服务器正在根据客户端的请求切换协议。</td>
+<td><code>await request.json()</code></td>
+<td>解析好的 Python 字典 / 列表对象</td>
 </tr>
 </tbody></table>
-<h3 id="2xx-成功响应"><a href="#2xx-成功响应" class="headerlink" title="2xx 成功响应"></a>2xx 成功响应</h3><table>
+<p>如果是几百 MB 的大文件，请使用 <code>request.stream()</code> 进行<strong>流式读取</strong>，避免内存溢出。</p>
+<h2 id="应用级状态"><a href="#应用级状态" class="headerlink" title="应用级状态"></a>应用级状态</h2><p><code>request.app.state</code> 里面能保存整个应用都能用上的静态对象。</p>
+<h2 id="Path-参数与-Query-参数"><a href="#Path-参数与-Query-参数" class="headerlink" title="Path 参数与 Query 参数"></a>Path 参数与 Query 参数</h2><table>
 <thead>
 <tr>
-<th>状态码</th>
-<th>含义</th>
+<th>示例</th>
+<th>参数类型</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>200 OK</td>
-<td>请求成功，服务器返回了请求的数据。</td>
+<td><code>GET /orders/123</code> 中的 <code>123</code></td>
+<td>path 参数</td>
 </tr>
 <tr>
-<td>201 Created</td>
-<td>请求成功，并且服务器创建了新的资源。</td>
-</tr>
-<tr>
-<td>204 No Content</td>
-<td>请求成功，但响应主体中没有新的数据。</td>
-</tr>
-</tbody></table>
-<h3 id="3xx-重定向消息"><a href="#3xx-重定向消息" class="headerlink" title="3xx 重定向消息"></a>3xx 重定向消息</h3><table>
-<thead>
-<tr>
-<th>状态码</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>301 Moved Permanently</td>
-<td>请求的资源已永久移动到新网址。</td>
-</tr>
-<tr>
-<td>302 Found</td>
-<td>请求的资源临时移动到新网址。</td>
-</tr>
-<tr>
-<td>304 Not Modified</td>
-<td>资源没有被修改，浏览器可以使用缓存的内容。</td>
-</tr>
-</tbody></table>
-<h3 id="4xx-客户端错误"><a href="#4xx-客户端错误" class="headerlink" title="4xx 客户端错误"></a>4xx 客户端错误</h3><table>
-<thead>
-<tr>
-<th>状态码</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>400 Bad Request</td>
-<td>请求有语法错误，服务器看不懂。</td>
-</tr>
-<tr>
-<td>401 Unauthorized</td>
-<td>请求需要用户的身份验证。</td>
-</tr>
-<tr>
-<td>403 Forbidden</td>
-<td>服务器拒绝执行该请求，没有权限。</td>
-</tr>
-<tr>
-<td>404 Not Found</td>
-<td>找不到请求的网页或资源。</td>
-</tr>
-</tbody></table>
-<h3 id="5xx-服务端错误"><a href="#5xx-服务端错误" class="headerlink" title="5xx 服务端错误"></a>5xx 服务端错误</h3><table>
-<thead>
-<tr>
-<th>状态码</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>500 Internal Server Error</td>
-<td>服务器内部出错了，无法完成请求。</td>
-</tr>
-<tr>
-<td>502 Bad Gateway</td>
-<td>网关或代理服务器从上游服务器收到了无效的响应。</td>
-</tr>
-<tr>
-<td>503 Service Unavailable</td>
-<td>服务器目前无法使用（超载或维护）。</td>
+<td><code>GET /orders?page=1&amp;size=20</code> 中的 <code>page</code>、<code>size</code></td>
+<td>query 参数</td>
 </tr>
 </tbody></table>
 
@@ -327,7 +254,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -393,7 +320,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -402,7 +329,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-count">58</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
